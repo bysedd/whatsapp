@@ -41,7 +41,6 @@ def get_messages(driver: AntiDetectDriver) -> list[str]:
     """
     Get the content of the messages in the Whatsapp Channel.
 
-    :param min_length: The minimum length of the message.
     :param driver: The AntiDetectDriver object representing the web driver.
     :return: A list of the messages in the driver.
     """
