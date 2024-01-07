@@ -30,7 +30,7 @@ def extract_list(list_elements: list) -> list[str]:
     :return: A list of strings extracted from the given list of elements.
     """
     # Regex pattern to find consecutive whitespace
-    pattern = re.compile("\s+")
+    pattern = re.compile(r"\s+")
     return [pattern.sub(" ", element.text.strip()) for element in list_elements]
 
 
@@ -60,7 +60,7 @@ def get_hour(driver: AntiDetectDriver) -> list[str]:
     )
 
     # Regex to find times in HH:MM format
-    time_pattern = re.compile("\d{2}:\d{2}")
+    time_pattern = re.compile(r"\d{2}:\d{2}")
     # Extract the schedules and form a list
     hours = time_pattern.findall(" ".join(raw_hours))
 
@@ -108,7 +108,7 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
     )
 
     # Pattern for numbers, including possible dot or comma
-    number_pattern = re.compile("[\d.,]+")
+    number_pattern = re.compile(r"[\d.,]+")
 
     result = []
     for text in raw_reactions:
