@@ -5,11 +5,13 @@ from botasaurus import AntiDetectDriver
 
 # region Selectors
 __channel_template = Template(
-    "span[class='ggj6brxn gfz4du6o r7fjleex g0rxnol2 lhj4utae le5p0ye3 l7jjieqr _11JPr'][title='$channel']"
+    "span[class='ggj6brxn gfz4du6o r7fjleex g0rxnol2 lhj4utae le5p0ye3 l7jjieqr _11JPr']"
+    "[title='$channel']"
 )
 
 selectors = {
-    "channels_button": "div[class='_3ndVb fbgy3m38 ft2m32mm oq31bsqd nu34rnf1'][title='Canais']",
+    "channels_button": "div[class='_3ndVb fbgy3m38 ft2m32mm oq31bsqd nu34rnf1']"
+                       "[title='Canais']",
     "channels": {
         "tv_globo": __channel_template.substitute(channel="TV Globo"),
         "g1": __channel_template.substitute(channel="g1"),
