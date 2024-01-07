@@ -117,7 +117,6 @@ dmypy.json
 .pytype/
 cython_debug/
 /profiles/
-/output/
 /error_logs/
 profiles.json
 local_storage.json
