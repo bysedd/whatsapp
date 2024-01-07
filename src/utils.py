@@ -18,6 +18,7 @@ selectors = {
     "hour": "span[class='l7jjieqr fewfhwl7'][dir='auto']",
     "reactions": "button[class='dhq51u3o']",
 }
+
 # endregion
 
 
@@ -30,7 +31,7 @@ def extract_list(list_elements: list) -> list[str]:
     :return: A list of strings extracted from the given list of elements.
     """
     # Regex pattern to find consecutive whitespace
-    pattern = re.compile("\s+")
+    pattern = re.compile(r"\s+")
     return [pattern.sub(" ", element.text.strip()) for element in list_elements]
 
 
@@ -55,12 +56,10 @@ def get_hour(driver: AntiDetectDriver) -> list[str]:
     :param driver: The driver used to interact with the web page.
     :return: A list of filtered hours in HH:MM format.
     """
-    raw_hours = extract_list(
-        driver.get_elements_or_none_by_selector(selectors["hour"])
-    )
+    raw_hours = extract_list(driver.get_elements_or_none_by_selector(selectors["hour"]))
 
     # Regex to find times in HH:MM format
-    time_pattern = re.compile("\d{2}:\d{2}")
+    time_pattern = re.compile(r"\d{2}:\d{2}")
     # Extract the schedules and form a list
     hours = time_pattern.findall(" ".join(raw_hours))
 
@@ -108,7 +107,7 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
     )
 
     # Pattern for numbers, including possible dot or comma
-    number_pattern = re.compile("[\d.,]+")
+    number_pattern = re.compile(r"[\d.,]+")
 
     result = []
     for text in raw_reactions:
