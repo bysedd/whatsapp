@@ -1,8 +1,10 @@
-from botasaurus import *
-from src.utils import *
-from time import sleep
 import csv
 from pathlib import Path
+from time import sleep
+
+from botasaurus import *
+
+from src.utils import *
 
 PATH = Path(__file__).parent.parent / "output"
 

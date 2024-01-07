@@ -18,6 +18,7 @@ selectors = {
     "hour": "span[class='l7jjieqr fewfhwl7'][dir='auto']",
     "reactions": "button[class='dhq51u3o']",
 }
+
 # endregion
 
 
@@ -55,9 +56,7 @@ def get_hour(driver: AntiDetectDriver) -> list[str]:
     :param driver: The driver used to interact with the web page.
     :return: A list of filtered hours in HH:MM format.
     """
-    raw_hours = extract_list(
-        driver.get_elements_or_none_by_selector(selectors["hour"])
-    )
+    raw_hours = extract_list(driver.get_elements_or_none_by_selector(selectors["hour"]))
 
     # Regex to find times in HH:MM format
     time_pattern = re.compile("\d{2}:\d{2}")
