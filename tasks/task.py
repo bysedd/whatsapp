@@ -4,7 +4,7 @@ from time import sleep
 
 from botasaurus import *
 
-from src.utils import selectors, get_messages, get_hour, get_reactions
+from src.utils import get_hour, get_messages, get_reactions, selectors
 
 PATH = Path(__file__).parent.parent / "output"
 
