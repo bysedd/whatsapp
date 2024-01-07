@@ -11,7 +11,7 @@ channel_template = Template(
 
 selectors = {
     "channels_button": "div[class='_3ndVb fbgy3m38 ft2m32mm oq31bsqd nu34rnf1']"
-                       "[title='Canais']",
+    "[title='Canais']",
     "channels": {
         "tv_globo": channel_template.substitute(channel="TV Globo"),
         "g1": channel_template.substitute(channel="g1"),
@@ -20,7 +20,6 @@ selectors = {
     "hour": "span[class='l7jjieqr fewfhwl7'][dir='auto']",
     "reactions": "button[class='dhq51u3o']",
 }
-
 
 # endregion
 
@@ -129,5 +128,6 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
     # endregion
 
     return result
+
 
 # endregion
