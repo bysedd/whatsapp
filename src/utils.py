@@ -5,8 +5,8 @@ from botasaurus import AntiDetectDriver
 
 # region Selectors
 channel_template = Template(
-    "span[class='ggj6brxn gfz4du6o r7fjleex g0rxnol2 lhj4utae le5p0ye3 l7jjieqr _11JPr']"
-    "[title='$channel']"
+    "span[class='ggj6brxn gfz4du6o r7fjleex g0rxnol2 lhj4utae"
+    " le5p0ye3 l7jjieqr _11JPr'][title='$channel']"
 )
 
 selectors = {
