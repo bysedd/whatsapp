@@ -116,3 +116,6 @@ dmypy.json
 .pyre/
 .pytype/
 cython_debug/
+/profiles/
+/output/
+/error_logs/
