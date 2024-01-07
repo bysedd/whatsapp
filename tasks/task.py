@@ -15,7 +15,7 @@ def main_task(driver: AntiDetectDriver, data):
     driver.click(selectors["channels"]["tv_globo"])
     sleep(10)
 
-    messages = get_content(driver)
+    messages = get_messages(driver)
     hours = get_hour(driver)
     reactions = get_reactions(driver)
 
@@ -24,7 +24,7 @@ def main_task(driver: AntiDetectDriver, data):
         emojis, total = reactions[i]
         data.append(
             {
-                "text": messages[i],
+                "message": messages[i],
                 "hour": hours[i],
                 "emoji_1": emojis[0],
                 "emoji_2": emojis[1],
