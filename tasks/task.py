@@ -14,7 +14,7 @@ PATH = Path(__file__).parent.parent / "output"
 def main_task(driver: AntiDetectDriver, data):
     """
     This method performs a series of tasks using the given browser driver and data.
-    It navigates to the WhatsApp web page, clicks on a specific button, and waits for a specific amount of time.
+    It navigates to the WhatsApp web page, join a specific channel.
     Then it retrieves messages, hours, and reactions from the web page.
 
     The method then processes the retrieved data and creates a list of dictionaries,
@@ -22,7 +22,7 @@ def main_task(driver: AntiDetectDriver, data):
 
     Finally, it saves the processed data in a CSV file.
 
-    :param driver: An instance of AntiDetectDriver, which is a browser driver with advanced features.
+    :param driver: An instance of AntiDetectDriver.
     :param data: A list of data to be processed and saved.
     :return: A list of dictionaries containing processed data.
     """
