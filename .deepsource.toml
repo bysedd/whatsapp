@@ -17,6 +17,3 @@ name = "yapf"
 
 [[transformers]]
 name = "isort"
-
-[[transformers]]
-name = "ruff"
