@@ -1,24 +1,23 @@
 import csv
-from pathlib import Path
 from time import sleep
 from typing import Literal
 
 from botasaurus import *
 
-from src.utils import get_hour, get_messages, get_reactions, valid_channel
-from src.constants import selectors
-
-PATH = Path(__file__).parent.parent / "output"
+from src.constants import selectors, PATH
+import src.utils as utils
 
 
-def task(*, channel: Literal['g1', 'tv_globo']) -> None:
+def task(*, channel: Literal['g1', 'tv_globo'], headless: bool) -> None:
     """
     Perform a series of tasks using the given browser driver and data.
 
     :param channel: The channel to join.
+    :param headless: Whether to run in headless mode.
     """
+
     # noinspection PyUnusedLocal
-    @browser(profile="whatsapp", headless=False)
+    @browser(profile="whatsapp", headless=headless)
     def main_task(driver: AntiDetectDriver, data):
         """
         This method performs a series of tasks using the given browser driver and data.
@@ -39,16 +38,21 @@ def task(*, channel: Literal['g1', 'tv_globo']) -> None:
         driver.click(selectors["channels"][channel])
         sleep(10)
 
-        messages = get_messages(driver)
-        hours = get_hour(driver)
-        reactions = get_reactions(driver)
+        messages = utils.get_messages(driver)
+        hours = utils.get_hour(driver)
+        reactions = utils.get_reactions(driver)
+
+        print(len(messages), len(hours), len(reactions))
+
+        if len(reactions) > len(messages):
+            reactions.pop(0)
+        elif len(reactions) < len(messages):
+            reactions.pop(-1)
 
         data = []
         for i in range(len(messages) - 1, 0, -1):
-            if len(reactions) > len(messages):
-                emojis, total = reactions[i + 1]
-            else:
-                emojis, total = reactions[i]
+            emojis, total = reactions[i]
+
             data.append(
                 {
                     "message": messages[i],
@@ -61,10 +65,10 @@ def task(*, channel: Literal['g1', 'tv_globo']) -> None:
                 }
             )
 
-        with open(PATH / f"data_{channel}.csv", "w") as f:
+        with utils.secure_open_write(file_name=channel) as f:
             writer = csv.DictWriter(f, fieldnames=data[0].keys())
             writer.writeheader()
             writer.writerows(data)
 
-    if valid_channel(channel):
+    if utils.valid_channel(channel):
         main_task()
