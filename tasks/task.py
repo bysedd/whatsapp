@@ -2,8 +2,8 @@ from time import sleep
 
 from botasaurus import *
 
-import src.utils as utils
 import src.constants as const
+import src.utils as utils
 
 
 def main_task(*, channels: const.AVAILABLE_CHANNELS, headless: bool) -> None:
@@ -13,6 +13,7 @@ def main_task(*, channels: const.AVAILABLE_CHANNELS, headless: bool) -> None:
     :param channels: The list of channels to scraping.
     :param headless: Whether to run in headless mode.
     """
+
     # noinspection PyUnusedLocal
     @browser(
         headless=headless,
