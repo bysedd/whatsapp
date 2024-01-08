@@ -1,6 +1,6 @@
 import re
 
-from src.constants import SELECTORS, PATH
+from src.constants import SELECTORS
 from botasaurus import AntiDetectDriver
 
 
@@ -49,22 +49,6 @@ def valid_channel(channel: str) -> bool:
     except KeyError:
         print(f"Invalid channel: '{channel}'")
         return False
-
-
-def secure_open_write(*, file_name: str):
-    """
-    Open a file for secure writing.
-
-    :param file_name: The name of the file to be created.
-    :return: A file object opened in "write" mode.
-    :raises ValueError: If disallowed, characters are detected in the file name.
-    """
-    disallowed_chars = ['..', '/', '\\']
-    if any(char in file_name for char in disallowed_chars):
-        raise ValueError(f"Disallowed characters detected in file name: {file_name}")
-
-    full_path = PATH / "output" / f"data_{file_name}.csv"
-    return open(full_path, "w")
 
 
 # endregion
@@ -125,7 +109,6 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
     raw_elements = driver.get_elements_or_none_by_selector(SELECTORS["reactions"])
     raw_reactions = [element.get_attribute("aria-label") for element in raw_elements]
 
-    # region Extract emoji and total reactions
     # Pattern for emojis
     emoji_pattern = re.compile(
         "["
@@ -143,7 +126,6 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
         "]+",
         flags=re.UNICODE,
     )
-
     # Pattern for numbers, including possible dot or comma
     number_pattern = re.compile(r"[\d.,]+")
 
@@ -151,17 +133,17 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
     for text in raw_reactions:
         # Find all emojis in the string
         emojis = emoji_pattern.findall(text)
-
         # Find all numbers in the string
         numbers = number_pattern.findall(text)
-
         # Remove dots and commas in each number
-        numbers = [number.replace(".", "").replace(",", "") for number in numbers]
-
+        numbers = [
+            number.replace(".", "").replace(",", "")
+            for number in numbers
+        ]
+        # Check if a number list is not empty, else assign 0 as the default total
+        total = int(numbers[-1]) if numbers else 0
         # Append a tuple of emojis and number to the result list
-        result.append((emojis, int(numbers[-1])))
-
-    # endregion
+        result.append((emojis, total))
 
     return result
 

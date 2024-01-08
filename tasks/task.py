@@ -13,12 +13,10 @@ def main_task(*, channels: const.AVAILABLE_CHANNELS, headless: bool) -> None:
     :param channels: The list of channels to scraping.
     :param headless: Whether to run in headless mode.
     """
-
     # noinspection PyUnusedLocal
     @browser(
         headless=headless,
         profile="whatsapp",
-        reuse_driver=True,
         block_images=True,
         output=None,
     )
@@ -40,33 +38,40 @@ def main_task(*, channels: const.AVAILABLE_CHANNELS, headless: bool) -> None:
         driver.get(const.WA_URL)
         # Wait 5 minutes for WhatsApp to open completely
         driver.click(const.SELECTORS["channels_button"], wait=const.WAIT_TIME)
-        driver.click(const.SELECTORS["channels"][channel])
-        sleep(10)
+        for channel in channels:
+            if utils.valid_channel(channel):
+                driver.click(const.SELECTORS["channels"][channel])
+                sleep(10)
 
-        messages = utils.get_messages(driver)
-        hours = utils.get_hour(driver)
-        reactions = utils.get_reactions(driver)
+                messages = utils.get_messages(driver)
+                hours = utils.get_hour(driver)
+                reactions = utils.get_reactions(driver)
 
-        messages, hours, reactions = utils.align_elements(messages, hours, reactions)
+                messages, hours, reactions = utils.align_elements(
+                    messages, hours, reactions
+                )
 
-        data = []
-        for i in range(len(messages) - 1, 0, -1):
-            emojis, total = reactions[i]
+                data = []
+                for i in range(len(messages) - 1, 0, -1):
+                    emojis, total = reactions[i]
 
-            data.append(
-                {
-                    "message": messages[i],
-                    "hour": hours[i],
-                    "emoji_1": emojis[0],
-                    "emoji_2": emojis[1],
-                    "emoji_3": emojis[2],
-                    "emoji_4": emojis[3],
-                    "total": total,
-                }
-            )
+                    # Pad emojis with None if its length is less than 4
+                    emojis = (emojis + [None] * 4)[:4]
 
-        bt.write_csv(data, filename=const.FILENAME_TEMPLATE.substitute(channel=channel))
+                    data.append(
+                        {
+                            "message": messages[i],
+                            "hour": hours[i],
+                            "emoji_1": emojis[0],
+                            "emoji_2": emojis[1],
+                            "emoji_3": emojis[2],
+                            "emoji_4": emojis[3],
+                            "total": total,
+                        }
+                    )
 
-    for channel in channels:
-        if utils.valid_channel(channel):
-            wrapper()
+                bt.write_csv(
+                    data, filename=const.FILENAME_TEMPLATE.substitute(channel=channel)
+                )
+
+    wrapper()
