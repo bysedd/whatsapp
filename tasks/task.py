@@ -1,22 +1,26 @@
-import csv
 from time import sleep
-from typing import Literal
 
 from botasaurus import *
 
 import src.utils as utils
-from src.constants import selectors
+from src.constants import selectors, available_channels
 
 
-def task(*, channel: Literal["g1", "tv_globo"], headless: bool) -> None:
+def task(*, channels: available_channels, headless: bool) -> None:
     """
     Perform a series of tasks using the given browser driver and data.
 
-    :param channel: The channel to join.
+    :param channels: The list of channels to scraping.
     :param headless: Whether to run in headless mode.
     """
     # noinspection PyUnusedLocal
-    @browser(profile="whatsapp", headless=headless)
+    @browser(
+        headless=headless,
+        profile="whatsapp",
+        reuse_driver=True,
+        block_images=True,
+        output=None,
+    )
     def main_task(driver: AntiDetectDriver, data):
         """
         This method performs a series of tasks using the given browser driver and data.
@@ -33,6 +37,7 @@ def task(*, channel: Literal["g1", "tv_globo"], headless: bool) -> None:
         :return: A list of dictionaries containing processed data.
         """
         driver.organic_get("https://web.whatsapp.com/")
+        # Wait 5 minutes for WhatsApp to open completely
         driver.click(selectors["channels_button"], wait=300)
         driver.click(selectors["channels"][channel])
         sleep(10)
@@ -62,10 +67,8 @@ def task(*, channel: Literal["g1", "tv_globo"], headless: bool) -> None:
                 }
             )
 
-        with utils.secure_open_write(file_name=channel) as f:
-            writer = csv.DictWriter(f, fieldnames=data[0].keys())
-            writer.writeheader()
-            writer.writerows(data)
+        bt.write_csv(data=data, filename=f"data_{channel}.csv")
 
-    if utils.valid_channel(channel):
-        main_task()
+    for channel in channels:
+        if utils.valid_channel(channel):
+            main_task()
