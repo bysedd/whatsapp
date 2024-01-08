@@ -5,7 +5,8 @@ from typing import Literal
 
 from botasaurus import *
 
-from src.utils import get_hour, get_messages, get_reactions, selectors
+from src.utils import get_hour, get_messages, get_reactions, valid_channel
+from src.constants import selectors
 
 PATH = Path(__file__).parent.parent / "output"
 
@@ -16,11 +17,6 @@ def task(*, channel: Literal['g1', 'tv_globo']) -> None:
 
     :param channel: The channel to join.
     """
-    try:
-        selectors["channels"][channel]
-    except KeyError:
-        print("Invalid channel")
-
     # noinspection PyUnusedLocal
     @browser(profile="whatsapp", headless=False)
     def main_task(driver: AntiDetectDriver, data):
@@ -41,7 +37,7 @@ def task(*, channel: Literal['g1', 'tv_globo']) -> None:
         driver.organic_get("https://web.whatsapp.com/")
         driver.click(selectors["channels_button"], wait=300)
         driver.click(selectors["channels"][channel])
-        sleep(15)
+        sleep(10)
 
         messages = get_messages(driver)
         hours = get_hour(driver)
@@ -70,4 +66,5 @@ def task(*, channel: Literal['g1', 'tv_globo']) -> None:
             writer.writeheader()
             writer.writerows(data)
 
-    main_task()
+    if valid_channel(channel):
+        main_task()
