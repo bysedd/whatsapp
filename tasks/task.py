@@ -10,7 +10,7 @@ PATH = Path(__file__).parent.parent / "output"
 
 
 # noinspection PyUnusedLocal
-@browser(profile="whatsapp", headless=True, block_images=True)
+@browser(profile="whatsapp", headless=False)
 def main_task(driver: AntiDetectDriver, data):
     """
     This method performs a series of tasks using the given browser driver and data.
@@ -37,7 +37,10 @@ def main_task(driver: AntiDetectDriver, data):
 
     data = []
     for i in range(len(messages) - 1, 0, -1):
-        emojis, total = reactions[i]
+        if len(reactions) > len(messages):
+            emojis, total = reactions[i + 1]
+        else:
+            emojis, total = reactions[i]
         data.append(
             {
                 "message": messages[i],
