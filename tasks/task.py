@@ -2,8 +2,8 @@ from time import sleep
 
 from botasaurus import *
 
-import src.utils as utils
 import src.constants as const
+import src.utils as utils
 
 
 def main_task(*, channels: const.AVAILABLE_CHANNELS, headless: bool) -> None:

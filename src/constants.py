@@ -1,5 +1,5 @@
-from string import Template
 from pathlib import Path
+from string import Template
 from typing import List
 
 CHANNEL_TEMPLATE = Template(
@@ -18,7 +18,7 @@ SELECTORS = {
     "hour": "span[class='l7jjieqr fewfhwl7'][dir='auto']",
     "reactions": "button[class='dhq51u3o']",
 }
-AVAILABLE_CHANNELS = List[list(SELECTORS['channels'].keys())]
+AVAILABLE_CHANNELS = List[list(SELECTORS["channels"].keys())]
 PATH = Path(__file__).parent.parent
 WA_URL = "https://web.whatsapp.com/"
 WAIT_TIME = 300
