@@ -1,6 +1,5 @@
 import re
-from src.constants import selectors
-
+from src.constants import selectors, PATH
 from botasaurus import AntiDetectDriver
 
 
@@ -18,12 +17,38 @@ def extract_list(list_elements: list) -> list[str]:
 
 
 def valid_channel(channel: str) -> bool:
+    """
+    Check if the specified channel is valid.
+
+    :param channel: The channel to be checked.
+    :return: True if the channel is valid, False otherwise.
+    """
     try:
         return bool(selectors["channels"][channel])
     except KeyError:
         print(f"Invalid channel: '{channel}'")
         return False
 
+
+def secure_open_write(*, file_name: str):
+    """
+    Open a file for secure writing.
+
+    :param file_name: The name of the file to be created.
+    :return: A file object opened in "write" mode.
+    :raises ValueError: If disallowed, characters are detected in the file name.
+    """
+    disallowed_chars = ['..', '/', '\\']
+    if any(char in file_name for char in disallowed_chars):
+        raise ValueError(f"Disallowed characters detected in file name: {file_name}")
+
+    full_path = PATH / "output" / f"data_{file_name}.csv"
+    return open(full_path, "w")
+
+
+# endregion
+
+# region Functions that help the bot
 
 def get_messages(driver: AntiDetectDriver) -> list[str]:
     """
@@ -118,6 +143,5 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
     # endregion
 
     return result
-
 
 # endregion
