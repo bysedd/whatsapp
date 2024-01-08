@@ -5,18 +5,19 @@ from typing import Literal
 
 from botasaurus import *
 
-from src.utils import get_hour, get_messages, get_reactions, valid_channel
 from src.constants import selectors
+from src.utils import get_hour, get_messages, get_reactions, valid_channel
 
 PATH = Path(__file__).parent.parent / "output"
 
 
-def task(*, channel: Literal['g1', 'tv_globo']) -> None:
+def task(*, channel: Literal["g1", "tv_globo"]) -> None:
     """
     Perform a series of tasks using the given browser driver and data.
 
     :param channel: The channel to join.
     """
+
     # noinspection PyUnusedLocal
     @browser(profile="whatsapp", headless=False)
     def main_task(driver: AntiDetectDriver, data):

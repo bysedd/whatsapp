@@ -1,7 +1,8 @@
 import re
-from src.constants import selectors
 
 from botasaurus import AntiDetectDriver
+
+from src.constants import selectors
 
 
 # region Auxiliary functions
@@ -35,10 +36,8 @@ def get_messages(driver: AntiDetectDriver) -> list[str]:
     raw_messages = extract_list(
         driver.get_elements_or_none_by_selector(selectors["message"])
     )
-    refined_messages = [re.split(r"[.!?;]", message)[0]
-                        for message in raw_messages]
-    return [re.sub(r"http://.*", "", message).strip()
-            for message in refined_messages]
+    refined_messages = [re.split(r"[.!?;]", message)[0] for message in raw_messages]
+    return [re.sub(r"http://.*", "", message).strip() for message in refined_messages]
 
 
 def get_hour(driver: AntiDetectDriver) -> list[str]:
