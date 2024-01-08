@@ -4,7 +4,7 @@ from typing import Literal
 
 from botasaurus import *
 
-from src.constants import selectors, PATH
+from src.constants import selectors
 import src.utils as utils
 
 
