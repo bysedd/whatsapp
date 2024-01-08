@@ -4,17 +4,18 @@ from typing import Literal
 
 from botasaurus import *
 
-from src.constants import selectors, PATH
 import src.utils as utils
+from src.constants import PATH, selectors
 
 
-def task(*, channel: Literal['g1', 'tv_globo'], headless: bool) -> None:
+def task(*, channel: Literal["g1", "tv_globo"], headless: bool) -> None:
     """
     Perform a series of tasks using the given browser driver and data.
 
     :param channel: The channel to join.
     :param headless: Whether to run in headless mode.
     """
+
     # noinspection PyUnusedLocal
     @browser(profile="whatsapp", headless=headless)
     def main_task(driver: AntiDetectDriver, data):
