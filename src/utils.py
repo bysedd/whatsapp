@@ -1,6 +1,6 @@
 import re
 
-from src.constants import selectors, PATH
+from src.constants import SELECTORS, PATH
 from botasaurus import AntiDetectDriver
 
 
@@ -17,6 +17,26 @@ def extract_list(list_elements: list) -> list[str]:
     return [pattern.sub(" ", element.text.strip()) for element in list_elements]
 
 
+def align_elements(
+        messages: list[str],
+        hours: list[str],
+        reactions: list[tuple[list[str], int]]
+):
+    """
+    Aligns the elements in the given lists.
+
+    :param messages: A list of strings representing messages.
+    :param hours: A list of integers representing hours.
+    :param reactions: A list of lists consisting of strings and an integer.
+    :return: A tuple of the aligned lists: messages, hours, and reactions.
+    """
+    if len(reactions) > len(messages):
+        reactions.pop(0)
+    if len(hours) > len(messages):
+        hours.pop(0)
+    return messages, hours, reactions
+
+
 def valid_channel(channel: str) -> bool:
     """
     Check if the specified channel is valid.
@@ -25,7 +45,7 @@ def valid_channel(channel: str) -> bool:
     :return: True if the channel is valid, False otherwise.
     """
     try:
-        return bool(selectors["channels"][channel])
+        return bool(SELECTORS["channels"][channel])
     except KeyError:
         print(f"Invalid channel: '{channel}'")
         return False
@@ -59,7 +79,7 @@ def get_messages(driver: AntiDetectDriver) -> list[str]:
     :return: A list of the messages in the driver.
     """
     raw_messages = extract_list(
-        driver.get_elements_or_none_by_selector(selectors["message"])
+        driver.get_elements_or_none_by_selector(SELECTORS["message"])
     )
     refined_messages = [re.split(r"[.!?;]", message)[0]
                         for message in raw_messages]
@@ -74,7 +94,7 @@ def get_hour(driver: AntiDetectDriver) -> list[str]:
     :param driver: The driver used to interact with the web page.
     :return: A list of filtered hours in HH:MM format.
     """
-    raw_hours = extract_list(driver.get_elements_or_none_by_selector(selectors["hour"]))
+    raw_hours = extract_list(driver.get_elements_or_none_by_selector(SELECTORS["hour"]))
 
     # Regex to find times in HH:MM format
     time_pattern = re.compile(r"\d{2}:\d{2}")
@@ -102,7 +122,7 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
              - A list of emojis found in the reaction string.
              - The total number of reactions.
     """
-    raw_elements = driver.get_elements_or_none_by_selector(selectors["reactions"])
+    raw_elements = driver.get_elements_or_none_by_selector(SELECTORS["reactions"])
     raw_reactions = [element.get_attribute("aria-label") for element in raw_elements]
 
     # region Extract emoji and total reactions

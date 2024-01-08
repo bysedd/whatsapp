@@ -3,10 +3,10 @@ from time import sleep
 from botasaurus import *
 
 import src.utils as utils
-from src.constants import selectors, available_channels
+import src.constants as const
 
 
-def task(*, channels: available_channels, headless: bool) -> None:
+def main_task(*, channels: const.AVAILABLE_CHANNELS, headless: bool) -> None:
     """
     Perform a series of tasks using the given browser driver and data.
 
@@ -22,7 +22,7 @@ def task(*, channels: available_channels, headless: bool) -> None:
         block_images=True,
         output=None,
     )
-    def main_task(driver: AntiDetectDriver, data):
+    def wrapper(driver: AntiDetectDriver, data):
         """
         This method performs a series of tasks using the given browser driver and data.
         It navigates to the WhatsApp web page, join a specific channel.
@@ -37,20 +37,17 @@ def task(*, channels: available_channels, headless: bool) -> None:
         :param data: A list of data to be processed and saved.
         :return: A list of dictionaries containing processed data.
         """
-        driver.organic_get("https://web.whatsapp.com/")
+        driver.get(const.WA_URL)
         # Wait 5 minutes for WhatsApp to open completely
-        driver.click(selectors["channels_button"], wait=300)
-        driver.click(selectors["channels"][channel])
+        driver.click(const.SELECTORS["channels_button"], wait=const.WAIT_TIME)
+        driver.click(const.SELECTORS["channels"][channel])
         sleep(10)
 
         messages = utils.get_messages(driver)
         hours = utils.get_hour(driver)
         reactions = utils.get_reactions(driver)
 
-        if len(reactions) > len(messages):
-            reactions.pop(0)
-        if len(hours) > len(messages):
-            hours.pop(0)
+        messages, hours, reactions = utils.align_elements(messages, hours, reactions)
 
         data = []
         for i in range(len(messages) - 1, 0, -1):
@@ -68,8 +65,8 @@ def task(*, channels: available_channels, headless: bool) -> None:
                 }
             )
 
-        bt.write_csv(data=data, filename=f"data_{channel}.csv")
+        bt.write_csv(data, filename=const.FILENAME_TEMPLATE.substitute(channel=channel))
 
     for channel in channels:
         if utils.valid_channel(channel):
-            main_task()
+            wrapper()
