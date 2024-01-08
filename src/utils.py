@@ -20,7 +20,7 @@ def extract_list(list_elements: list) -> list[str]:
 def align_elements(
         messages: list[str],
         hours: list[str],
-        reactions: list[tuple[list[str], int]]
+        reactions: list[tuple[list[str | None], int]]
 ):
     """
     Aligns the elements in the given lists.
@@ -32,6 +32,8 @@ def align_elements(
     """
     if len(reactions) > len(messages):
         reactions.pop(0)
+    if len(reactions) < len(messages):
+        reactions.append(([], 0))
     if len(hours) > len(messages):
         hours.pop(0)
     return messages, hours, reactions
