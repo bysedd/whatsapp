@@ -15,6 +15,7 @@ def task(*, channel: Literal["g1", "tv_globo"], headless: bool) -> None:
     :param channel: The channel to join.
     :param headless: Whether to run in headless mode.
     """
+
     # noinspection PyUnusedLocal
     @browser(profile="whatsapp", headless=headless)
     def main_task(driver: AntiDetectDriver, data):
