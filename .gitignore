@@ -122,3 +122,4 @@ cython_debug/
 /cache/
 profiles.json
 local_storage.json
+/output/
