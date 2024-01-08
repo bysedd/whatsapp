@@ -1,7 +1,8 @@
 import re
 
-from src.constants import selectors, PATH
 from botasaurus import AntiDetectDriver
+
+from src.constants import PATH, selectors
 
 
 # region Auxiliary functions
@@ -39,7 +40,7 @@ def secure_open_write(*, file_name: str):
     :return: A file object opened in "write" mode.
     :raises ValueError: If disallowed, characters are detected in the file name.
     """
-    disallowed_chars = ['..', '/', '\\']
+    disallowed_chars = ["..", "/", "\\"]
     if any(char in file_name for char in disallowed_chars):
         raise ValueError(f"Disallowed characters detected in file name: {file_name}")
 
@@ -51,6 +52,7 @@ def secure_open_write(*, file_name: str):
 
 # region Functions that help the bot
 
+
 def get_messages(driver: AntiDetectDriver) -> list[str]:
     """
     Get the content of the messages in the Whatsapp Channel.
@@ -61,10 +63,8 @@ def get_messages(driver: AntiDetectDriver) -> list[str]:
     raw_messages = extract_list(
         driver.get_elements_or_none_by_selector(selectors["message"])
     )
-    refined_messages = [re.split(r"[.!?;]", message)[0]
-                        for message in raw_messages]
-    return [re.sub(r"http://.*", "", message).strip()
-            for message in refined_messages]
+    refined_messages = [re.split(r"[.!?;]", message)[0] for message in raw_messages]
+    return [re.sub(r"http://.*", "", message).strip() for message in refined_messages]
 
 
 def get_hour(driver: AntiDetectDriver) -> list[str]:
@@ -144,5 +144,6 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
     # endregion
 
     return result
+
 
 # endregion

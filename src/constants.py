@@ -1,5 +1,5 @@
-from string import Template
 from pathlib import Path
+from string import Template
 from typing import List
 
 channel_template = Template(
@@ -19,6 +19,6 @@ selectors = {
     "reactions": "button[class='dhq51u3o']",
 }
 
-available_channels = List[list(selectors['channels'].keys())]
+available_channels = List[list(selectors["channels"].keys())]
 
 PATH = Path(__file__).parent.parent

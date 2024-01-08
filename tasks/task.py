@@ -3,7 +3,7 @@ from time import sleep
 from botasaurus import *
 
 import src.utils as utils
-from src.constants import selectors, available_channels
+from src.constants import available_channels, selectors
 
 
 def task(*, channels: available_channels, headless: bool) -> None:
