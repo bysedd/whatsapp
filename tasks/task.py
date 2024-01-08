@@ -41,12 +41,10 @@ def task(*, channel: Literal["g1", "tv_globo"], headless: bool) -> None:
         hours = utils.get_hour(driver)
         reactions = utils.get_reactions(driver)
 
-        print(len(messages), len(hours), len(reactions))
-
         if len(reactions) > len(messages):
             reactions.pop(0)
-        elif len(reactions) < len(messages):
-            reactions.pop(-1)
+        if len(hours) > len(messages):
+            hours.pop(0)
 
         data = []
         for i in range(len(messages) - 1, 0, -1):
