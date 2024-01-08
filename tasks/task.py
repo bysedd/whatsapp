@@ -13,6 +13,7 @@ def task(*, channels: available_channels, headless: bool) -> None:
     :param channels: The list of channels to scraping.
     :param headless: Whether to run in headless mode.
     """
+
     # noinspection PyUnusedLocal
     @browser(
         headless=headless,
