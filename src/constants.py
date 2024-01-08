@@ -1,5 +1,5 @@
-from string import Template
 from pathlib import Path
+from string import Template
 
 channel_template = Template(
     "span[class='ggj6brxn gfz4du6o r7fjleex g0rxnol2 lhj4utae"
