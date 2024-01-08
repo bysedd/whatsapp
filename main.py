@@ -1,4 +1,5 @@
-from tasks.task import main_task
+from tasks.task import task
 
 if __name__ == "__main__":
-    main_task()
+    task(channel='tv_globo')
+    task(channel='g1')
