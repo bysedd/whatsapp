@@ -1,5 +1,4 @@
 from string import Template
-from typing import List
 
 CHANNEL_TEMPLATE = Template(
     "span[class='ggj6brxn gfz4du6o r7fjleex g0rxnol2 lhj4utae"
@@ -12,12 +11,16 @@ SELECTORS = {
     "channels": {
         "tv_globo": CHANNEL_TEMPLATE.substitute(channel="TV Globo"),
         "g1": CHANNEL_TEMPLATE.substitute(channel="g1"),
+        "globo_com": CHANNEL_TEMPLATE.substitute(
+            channel="globo.com I Últimas notícias: "
+                    "jornalismo, esporte e entretenimento"
+        )
     },
     "message": "span[class='_11JPr selectable-text copyable-text']",
     "hour": "span[class='l7jjieqr fewfhwl7'][dir='auto']",
     "reactions": "button[class='dhq51u3o']",
 }
-AVAILABLE_CHANNELS = List[list(SELECTORS["channels"].keys())]
+AVAILABLE_CHANNELS = list(SELECTORS["channels"].keys())
 WA_URL = "https://web.whatsapp.com/"
 WAIT_TIME = 300
 SLEEP_TIME = 10
