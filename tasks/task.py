@@ -20,6 +20,7 @@ def main_task(*, channels: list[str], headless: bool) -> None:
         profile="whatsapp",
         block_images=True,
         output=None,
+        reuse_driver=True,
     )
     def wrapper(driver: AntiDetectDriver, data):
         """
@@ -38,44 +39,50 @@ def main_task(*, channels: list[str], headless: bool) -> None:
         """
         for channel in channels:
             if utils.valid_channel(channel):
-                driver.organic_get(const.WA_URL)
+                driver.get(const.WA_URL)
                 # Wait 5 minutes for WhatsApp to open completely
-                driver.click(const.SELECTORS["channels_button"], wait=const.WAIT_TIME)
-                driver.click(const.SELECTORS["channels"][channel], wait=const.WAIT_TIME)
-                sleep(const.SLEEP_TIME)
-
-                messages = utils.get_messages(driver)
-                hours = utils.get_hour(driver)
-                reactions = utils.get_reactions(driver)
-
-                messages, hours, reactions = utils.align_elements(
-                    messages, hours, reactions
+                driver.click(const.SELECTORS["channels_button"], wait=const.LONG_TIME)
+                channel_chat = driver.get_element_or_none_by_selector(
+                    const.SELECTORS["channels"][channel], wait=const.SHORT_TIME
                 )
+                if channel_chat:
+                    driver.click(const.SELECTORS["channels"][channel])
+                    sleep(const.SHORT_TIME)
 
-                data = []
-                for i in range(len(messages) - 1, 0, -1):
-                    if len(reactions) < len(messages):
-                        emojis, total = reactions[i - 1]
-                    else:
-                        emojis, total = reactions[i]
+                    messages = utils.get_messages(driver)
+                    hours = utils.get_hour(driver)
+                    reactions = utils.get_reactions(driver)
 
-                    # Pad emojis with None if its length is less than 4
-                    emojis = (emojis + [None] * 4)[:4]
-
-                    data.append(
-                        {
-                            "message": messages[i],
-                            "hour": hours[i],
-                            "emoji_1": emojis[0],
-                            "emoji_2": emojis[1],
-                            "emoji_3": emojis[2],
-                            "emoji_4": emojis[3],
-                            "total": total,
-                        }
+                    messages, hours, reactions = utils.align_elements(
+                        messages, hours, reactions
                     )
 
-                bt.write_csv(
-                    data, filename=const.FILENAME_TEMPLATE.substitute(channel=channel)
-                )
+                    # Create dataset with the obtained data
+                    data = []
+                    for i in range(len(messages) - 1, 0, -1):
+                        if len(reactions) < len(messages):
+                            emojis, total = reactions[i - 1]
+                        else:
+                            emojis, total = reactions[i]
+                        # Pad emojis with None if its length is less than 4
+                        emojis = (emojis + [None] * 4)[:4]
+                        data.append(
+                            {
+                                "message": messages[i],
+                                "hour": hours[i],
+                                "emoji_1": emojis[0],
+                                "emoji_2": emojis[1],
+                                "emoji_3": emojis[2],
+                                "emoji_4": emojis[3],
+                                "total": total,
+                            }
+                        )
+
+                    bt.write_csv(
+                        data,
+                        filename=const.FILENAME_TEMPLATE.substitute(channel=channel)
+                    )
+                else:
+                    print(f"You're probably not following channel '{channel}'")
 
     wrapper()
