@@ -13,8 +13,8 @@ SELECTORS = {
         "g1": CHANNEL_TEMPLATE.substitute(channel="g1"),
         "globo_com": CHANNEL_TEMPLATE.substitute(
             channel="globo.com I Últimas notícias: "
-                    "jornalismo, esporte e entretenimento"
-        )
+            "jornalismo, esporte e entretenimento"
+        ),
     },
     "message": "span[class='_11JPr selectable-text copyable-text']",
     "hour": "span[class='l7jjieqr fewfhwl7'][dir='auto']",
