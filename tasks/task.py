@@ -36,11 +36,11 @@ def main_task(*, channels: list[str], headless: bool) -> None:
         :param data: A list of data to be processed and saved.
         :return: A list of dictionaries containing processed data.
         """
-        driver.organic_get(const.WA_URL)
-        # Wait 5 minutes for WhatsApp to open completely
-        driver.click(const.SELECTORS["channels_button"], wait=const.WAIT_TIME)
         for channel in channels:
             if utils.valid_channel(channel):
+                driver.organic_get(const.WA_URL)
+                # Wait 5 minutes for WhatsApp to open completely
+                driver.click(const.SELECTORS["channels_button"], wait=const.WAIT_TIME)
                 driver.click(const.SELECTORS["channels"][channel], wait=const.WAIT_TIME)
                 sleep(const.SLEEP_TIME)
 
