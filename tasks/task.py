@@ -6,7 +6,7 @@ import src.constants as const
 import src.utils as utils
 
 
-def main_task(*, channels: const.AVAILABLE_CHANNELS, headless: bool) -> None:
+def main_task(*, channels: list[str], headless: bool) -> None:
     """
     Perform a series of tasks using the given browser driver and data.
 
