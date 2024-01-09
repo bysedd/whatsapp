@@ -11,7 +11,7 @@ SELECTORS = {
     "channels": {
         "tv_globo": CHANNEL_TEMPLATE.substitute(channel="TV Globo"),
         "g1": CHANNEL_TEMPLATE.substitute(channel="g1"),
-        "globo_com": CHANNEL_TEMPLATE.substitute(
+        "globo": CHANNEL_TEMPLATE.substitute(
             channel="globo.com I Últimas notícias: "
             "jornalismo, esporte e entretenimento"
         ),
