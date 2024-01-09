@@ -26,8 +26,8 @@ def align_elements(
     Aligns the elements in the given lists.
 
     :param messages: A list of strings representing messages.
-    :param hours: A list of integers representing hours.
-    :param reactions: A list of lists consisting of strings and an integer.
+    :param hours: A list of strings representing hours.
+    :param reactions: A list of tuple consisting of a list of strings and an integer.
     :return: A tuple of the aligned lists: messages, hours, and reactions.
     """
     if len(reactions) > len(messages):
@@ -36,6 +36,16 @@ def align_elements(
         reactions.append(([], 0))
     if len(hours) > len(messages):
         hours.pop(0)
+
+    new_reactions = []
+    previous_emojis = None
+    for i, reaction in enumerate(reactions):
+        emojis = reaction[0]
+        if emojis != previous_emojis:
+            new_reactions.append(reaction)
+            previous_emojis = emojis
+    reactions = new_reactions
+
     return messages, hours, reactions
 
 

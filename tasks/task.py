@@ -35,7 +35,7 @@ def main_task(*, channels: const.AVAILABLE_CHANNELS, headless: bool) -> None:
         :param data: A list of data to be processed and saved.
         :return: A list of dictionaries containing processed data.
         """
-        driver.get(const.WA_URL)
+        driver.organic_get(const.WA_URL)
         # Wait 5 minutes for WhatsApp to open completely
         driver.click(const.SELECTORS["channels_button"], wait=const.WAIT_TIME)
         for channel in channels:
@@ -51,9 +51,14 @@ def main_task(*, channels: const.AVAILABLE_CHANNELS, headless: bool) -> None:
                     messages, hours, reactions
                 )
 
+                # print(f"{len(messages)=}, {len(hours)=}, {len(reactions)=}")
+
                 data = []
                 for i in range(len(messages) - 1, 0, -1):
-                    emojis, total = reactions[i]
+                    if len(reactions) < len(messages):
+                        emojis, total = reactions[i - 1]
+                    else:
+                        emojis, total = reactions[i]
 
                     # Pad emojis with None if its length is less than 4
                     emojis = (emojis + [None] * 4)[:4]
