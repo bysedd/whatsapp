@@ -31,6 +31,8 @@ def align_elements(
     """
     if len(reactions) > len(messages):
         reactions.pop(0)
+    if len(reactions) < len(messages):
+        reactions.append(([], 0))
     if len(hours) > len(messages):
         hours.pop(0)
 
