@@ -23,4 +23,4 @@ SELECTORS = {
 AVAILABLE_CHANNELS = list(SELECTORS["channels"].keys())
 WA_URL = "https://web.whatsapp.com/"
 WAIT_TIME = 300
-SLEEP_TIME = 10
+SLEEP_TIME = 5
