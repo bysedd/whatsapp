@@ -1,7 +1,8 @@
 import re
 
-from src.constants import SELECTORS
 from botasaurus import AntiDetectDriver
+
+from src.constants import SELECTORS
 
 
 # region Auxiliary functions
@@ -18,9 +19,7 @@ def extract_list(list_elements: list) -> list[str]:
 
 
 def align_elements(
-        messages: list[str],
-        hours: list[str],
-        reactions: list[tuple[list[str | None], int]]
+    messages: list[str], hours: list[str], reactions: list[tuple[list[str | None], int]]
 ):
     """
     Aligns the elements in the given lists.
@@ -67,6 +66,7 @@ def valid_channel(channel: str) -> bool:
 
 # region Functions that help the bot
 
+
 def get_messages(driver: AntiDetectDriver) -> list[str]:
     """
     Get the content of the messages in the Whatsapp Channel.
@@ -77,10 +77,8 @@ def get_messages(driver: AntiDetectDriver) -> list[str]:
     raw_messages = extract_list(
         driver.get_elements_or_none_by_selector(SELECTORS["message"])
     )
-    refined_messages = [re.split(r"[.!?;]", message)[0]
-                        for message in raw_messages]
-    return [re.sub(r"http://.*", "", message).strip()
-            for message in refined_messages]
+    refined_messages = [re.split(r"[.!?;]", message)[0] for message in raw_messages]
+    return [re.sub(r"http://.*", "", message).strip() for message in refined_messages]
 
 
 def get_hour(driver: AntiDetectDriver) -> list[str]:
@@ -148,15 +146,13 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
         # Find all numbers in the string
         numbers = number_pattern.findall(text)
         # Remove dots and commas in each number
-        numbers = [
-            number.replace(".", "").replace(",", "")
-            for number in numbers
-        ]
+        numbers = [number.replace(".", "").replace(",", "") for number in numbers]
         # Check if a number list is not empty, else assign 0 as the default total
         total = int(numbers[-1]) if numbers else 0
         # Append a tuple of emojis and number to the result list
         result.append((emojis, total))
 
     return result
+
 
 # endregion
