@@ -51,8 +51,6 @@ def main_task(*, channels: const.AVAILABLE_CHANNELS, headless: bool) -> None:
                     messages, hours, reactions
                 )
 
-                # print(f"{len(messages)=}, {len(hours)=}, {len(reactions)=}")
-
                 data = []
                 for i in range(len(messages) - 1, 0, -1):
                     if len(reactions) < len(messages):

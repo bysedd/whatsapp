@@ -39,7 +39,7 @@ def align_elements(
 
     new_reactions = []
     previous_emojis = None
-    for i, reaction in enumerate(reactions):
+    for reaction in reactions:
         emojis = reaction[0]
         if emojis != previous_emojis:
             new_reactions.append(reaction)
