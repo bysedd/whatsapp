@@ -40,7 +40,7 @@ def main_task(*, channels: const.AVAILABLE_CHANNELS, headless: bool) -> None:
         driver.click(const.SELECTORS["channels_button"], wait=const.WAIT_TIME)
         for channel in channels:
             if utils.valid_channel(channel):
-                driver.click(const.SELECTORS["channels"][channel])
+                driver.click(const.SELECTORS["channels"][channel], wait=const.WAIT_TIME)
                 sleep(const.SLEEP_TIME)
 
                 messages = utils.get_messages(driver)
