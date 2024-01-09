@@ -143,8 +143,8 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
         emojis = emoji_pattern.findall(text)
         # Find all numbers in the string
         numbers = number_pattern.findall(text)
-        # Remove dots and commas in each number
-        numbers = [number.replace(".", "").replace(",", "") for number in numbers]
+        # Remove dots in each number
+        numbers = [number.replace(".", "") for number in numbers]
         # Check if a number list is not empty, else assign 0 as the default total
         total = int(numbers[-1]) if numbers else 0
         # Append a tuple of emojis and number to the result list
