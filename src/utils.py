@@ -77,8 +77,15 @@ def get_messages(driver: AntiDetectDriver) -> list[str]:
     raw_messages = extract_list(
         driver.get_elements_or_none_by_selector(SELECTORS["message"])
     )
-    refined_messages = [re.split(r"[.!?;]", message)[0] for message in raw_messages]
-    return [re.sub(r"http://.*", "", message).strip() for message in refined_messages]
+    pattern = r"[.!?;]"
+    return [
+        re.sub(
+            r"http://.*", "", (
+                re.split(pattern, message)[0][:-1]
+                if message.endswith(":")
+                else re.split(pattern, message)[0])).strip()
+        for message in raw_messages
+    ]
 
 
 def get_hour(driver: AntiDetectDriver) -> list[str]:
