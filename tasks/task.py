@@ -80,7 +80,7 @@ def main_task(*, channels: list[str], headless: bool) -> None:
 
                     bt.write_csv(
                         data,
-                        filename=const.FILENAME_TEMPLATE.substitute(channel=channel)
+                        filename=const.FILENAME_TEMPLATE.substitute(channel=channel),
                     )
                 else:
                     print(f"You're probably not following channel '{channel}'")

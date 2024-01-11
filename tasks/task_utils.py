@@ -1,7 +1,9 @@
-from botasaurus import AntiDetectDriver
-from src.utils import extract_list, simplify_channel_name
-from src.constants import SELECTORS, CHANNEL_TEMPLATE
 import re
+
+from botasaurus import AntiDetectDriver
+
+from src.constants import CHANNEL_TEMPLATE, SELECTORS
+from src.utils import extract_list, simplify_channel_name
 
 
 def get_messages(driver: AntiDetectDriver) -> list[str]:
@@ -17,10 +19,14 @@ def get_messages(driver: AntiDetectDriver) -> list[str]:
     pattern = r"[.!?;]"
     return [
         re.sub(
-            r"http://.*", "", (
+            r"http://.*",
+            "",
+            (
                 re.split(pattern, message)[0][:-1]
                 if message.endswith(":")
-                else re.split(pattern, message)[0])).strip()
+                else re.split(pattern, message)[0]
+            ),
+        ).strip()
         for message in raw_messages
     ]
 
@@ -106,14 +112,11 @@ def get_channels(driver: AntiDetectDriver) -> dict[str, str]:
     :param driver: The driver used to interact with the web page.
     :return: A list of available channels.
     """
-    channel_list = driver.get_element_or_none_by_selector(
-        SELECTORS['channel_list']
-    )
-    channels = channel_list.find_elements('css selector', SELECTORS['channel'])
+    channel_list = driver.get_element_or_none_by_selector(SELECTORS["channel_list"])
+    channels = channel_list.find_elements("css selector", SELECTORS["channel"])
     return {
-        simplify_channel_name(channel.get_attribute("title")):
-            CHANNEL_TEMPLATE.substitute(
-                channel=channel.get_attribute("title")
-            )
+        simplify_channel_name(
+            channel.get_attribute("title")
+        ): CHANNEL_TEMPLATE.substitute(channel=channel.get_attribute("title"))
         for channel in channels
     }

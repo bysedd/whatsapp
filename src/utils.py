@@ -80,10 +80,14 @@ def get_messages(driver: AntiDetectDriver) -> list[str]:
     pattern = r"[.!?;]"
     return [
         re.sub(
-            r"http://.*", "", (
+            r"http://.*",
+            "",
+            (
                 re.split(pattern, message)[0][:-1]
                 if message.endswith(":")
-                else re.split(pattern, message)[0])).strip()
+                else re.split(pattern, message)[0]
+            ),
+        ).strip()
         for message in raw_messages
     ]
 
