@@ -52,4 +52,4 @@ def simplify_channel_name(channel_name: str) -> str:
     :return: The simplified channel name.
     """
     name_without_spaces = re.sub(r"\s", "_", channel_name)
-    return re.split(r'[.]', name_without_spaces)[0]
+    return re.split(r"[.]", name_without_spaces)[0]
