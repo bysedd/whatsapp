@@ -1,7 +1,9 @@
-from botasaurus import AntiDetectDriver
-from src.utils import extract_list, simplify_channel_name
-from src.constants import SELECTORS, CHANNEL_TEMPLATE, MINIMUM_MESSAGE_SIZE
 import re
+
+from botasaurus import AntiDetectDriver
+
+from src.constants import CHANNEL_TEMPLATE, MINIMUM_MESSAGE_SIZE, SELECTORS
+from src.utils import extract_list, simplify_channel_name
 
 
 def get_messages(driver: AntiDetectDriver) -> list[str]:
@@ -76,8 +78,9 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
     emojis = [
         [
             emoji.get_attribute("alt")
-            for emoji in element.find_elements(by='tag name', value='img')
-        ] for element in raw_elements
+            for emoji in element.find_elements(by="tag name", value="img")
+        ]
+        for element in raw_elements
     ]
 
     # Pattern for numbers, including possible dot or comma
@@ -104,14 +107,11 @@ def get_channels(driver: AntiDetectDriver) -> dict[str, str]:
     :param driver: The driver used to interact with the web page.
     :return: A list of available channels.
     """
-    channel_list = driver.get_element_or_none_by_selector(
-        SELECTORS['channel_list']
-    )
-    channels = channel_list.find_elements('css selector', SELECTORS['channel'])
+    channel_list = driver.get_element_or_none_by_selector(SELECTORS["channel_list"])
+    channels = channel_list.find_elements("css selector", SELECTORS["channel"])
     return {
-        simplify_channel_name(channel.get_attribute("title")):
-            CHANNEL_TEMPLATE.substitute(
-                channel=channel.get_attribute("title")
-            )
+        simplify_channel_name(
+            channel.get_attribute("title")
+        ): CHANNEL_TEMPLATE.substitute(channel=channel.get_attribute("title"))
         for channel in channels
     }
