@@ -4,13 +4,13 @@ from botasaurus import *
 
 import src.constants as const
 import src.utils as utils
-import tasks.task_utils as task_utils
 
 
-def main_task(*, headless: bool) -> None:
+def main_task(*, channels: list[str], headless: bool) -> None:
     """
     Perform a series of tasks using the given browser driver and data.
 
+    :param channels: The list of channels to scraping.
     :param headless: Whether to run in headless mode.
     """
 
@@ -37,54 +37,52 @@ def main_task(*, headless: bool) -> None:
         :param data: A list of data to be processed and saved.
         :return: A list of dictionaries containing processed data.
         """
-        driver.get(const.WA_URL)
-        # Wait 5 minutes for WhatsApp to open completely
-        driver.click(const.SELECTORS["channels_button"], wait=const.LONG_TIME)
-        # Get all the channels you are following
-        channels = task_utils.get_channels(driver)
-
-        for name, selector in channels.items():
-            channel_chat = driver.get_element_or_none_by_selector(
-                selector, wait=const.SHORT_TIME
-            )
-            if channel_chat:
-                driver.click(selector)
-                sleep(const.SHORT_TIME)
-
-                messages = task_utils.get_messages(driver)
-                hours = task_utils.get_hour(driver)
-                reactions = task_utils.get_reactions(driver)
-
-                messages, hours, reactions = utils.align_elements(
-                    messages, hours, reactions
+        for channel in channels:
+            if utils.valid_channel(channel):
+                driver.get(const.WA_URL)
+                # Wait 5 minutes for WhatsApp to open completely
+                driver.click(const.SELECTORS["channels_button"], wait=const.LONG_TIME)
+                channel_chat = driver.get_element_or_none_by_selector(
+                    const.SELECTORS["channels"][channel], wait=const.SHORT_TIME
                 )
+                if channel_chat:
+                    driver.click(const.SELECTORS["channels"][channel])
+                    sleep(const.SHORT_TIME)
 
-                # Create dataset with the obtained data
-                data = []
-                for i in range(len(messages) - 1, 0, -1):
-                    if len(reactions) < len(messages):
-                        emojis, total = reactions[i - 1]
-                    else:
-                        emojis, total = reactions[i]
-                    # Pad emojis with None if its length is less than 4
-                    emojis = (emojis + [None] * 4)[:4]
-                    data.append(
-                        {
-                            "message": messages[i],
-                            "hour": hours[i],
-                            "emoji_1": emojis[0],
-                            "emoji_2": emojis[1],
-                            "emoji_3": emojis[2],
-                            "emoji_4": emojis[3],
-                            "total": total,
-                        }
+                    messages = utils.get_messages(driver)
+                    hours = utils.get_hour(driver)
+                    reactions = utils.get_reactions(driver)
+
+                    messages, hours, reactions = utils.align_elements(
+                        messages, hours, reactions
                     )
 
-                bt.write_csv(
-                    data,
-                    filename=const.FILENAME_TEMPLATE.substitute(channel=name)
-                )
-            else:
-                print(f"You're probably not following channel '{name}'")
+                    # Create dataset with the obtained data
+                    data = []
+                    for i in range(len(messages) - 1, 0, -1):
+                        if len(reactions) < len(messages):
+                            emojis, total = reactions[i - 1]
+                        else:
+                            emojis, total = reactions[i]
+                        # Pad emojis with None if its length is less than 4
+                        emojis = (emojis + [None] * 4)[:4]
+                        data.append(
+                            {
+                                "message": messages[i],
+                                "hour": hours[i],
+                                "emoji_1": emojis[0],
+                                "emoji_2": emojis[1],
+                                "emoji_3": emojis[2],
+                                "emoji_4": emojis[3],
+                                "total": total,
+                            }
+                        )
+
+                    bt.write_csv(
+                        data,
+                        filename=const.FILENAME_TEMPLATE.substitute(channel=channel)
+                    )
+                else:
+                    print(f"You're probably not following channel '{channel}'")
 
     wrapper()
