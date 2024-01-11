@@ -21,7 +21,7 @@ def align_elements(
 
     :param messages: A list of strings representing messages.
     :param hours: A list of strings representing hours.
-    :param reactions: A list of tuple consisting of a list of strings and an integer.
+    :param reactions: A list of tuples consisting of a list of strings and an integer.
     :return: A tuple of the aligned lists: messages, hours, and reactions.
     """
     if len(reactions) > len(messages):
