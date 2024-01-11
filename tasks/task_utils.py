@@ -14,10 +14,10 @@ def get_messages(driver: AntiDetectDriver) -> list[str]:
     raw_messages = extract_list(
         driver.get_elements_or_none_by_selector(SELECTORS["message"])
     )
-    pattern = r"[.!?;]"
+    pattern = r"[.!?;-]"
     return [
         re.sub(
-            r"http://.*", "", (
+            r"https?://.*", "", (
                 re.split(pattern, message)[0][:-1]
                 if message.endswith(":")
                 else re.split(pattern, message)[0])).strip()
@@ -63,30 +63,18 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
     raw_elements = driver.get_elements_or_none_by_selector(SELECTORS["reactions"])
     raw_reactions = [element.get_attribute("aria-label") for element in raw_elements]
 
-    # Pattern for emojis
-    emoji_pattern = re.compile(
-        "["
-        "\U0001F600-\U0001F64F"
-        "\U0001F300-\U0001F5FF"
-        "\U0001F680-\U0001F6FF"
-        "\U0001F1E0-\U0001F1FF"
-        "\U00002702-\U000027B0"
-        "\U000024C2-\U0001F251"
-        "\U0001f926-\U0001f937"
-        "\U0001F1F2"
-        "\U0001F1F4"
-        "\U0001F620"
-        "\U0001F916"
-        "]+",
-        flags=re.UNICODE,
-    )
+    emojis = [
+        [
+            emoji.get_attribute("alt")
+            for emoji in element.find_elements(by='tag name', value='img')
+        ] for element in raw_elements
+    ]
+
     # Pattern for numbers, including possible dot or comma
     number_pattern = re.compile(r"[\d.,]+")
 
     result = []
-    for text in raw_reactions:
-        # Find all emojis in the string
-        emojis = emoji_pattern.findall(text)
+    for i, text in enumerate(raw_reactions):
         # Find all numbers in the string
         numbers = number_pattern.findall(text)
         # Remove dots in each number
@@ -94,7 +82,7 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
         # Check if a number list is not empty, else assign 0 as the default total
         total = int(numbers[-1]) if numbers else 0
         # Append a tuple of emojis and number to the result list
-        result.append((emojis, total))
+        result.append((emojis[i], total))
 
     return result
 
