@@ -18,7 +18,6 @@ def main_task(*, headless: bool) -> None:
     @browser(
         headless=headless,
         profile="whatsapp",
-        block_images=True,
         output=None,
         reuse_driver=True,
     )
@@ -44,7 +43,7 @@ def main_task(*, headless: bool) -> None:
 
         for name, element in channels.items():
             channel_chat = driver.get_element_or_none_by_selector(
-                element, wait=const.SHORT_TIME
+                element, wait=const.LONG_TIME
             )
             if channel_chat:
                 driver.click(element)
@@ -57,10 +56,11 @@ def main_task(*, headless: bool) -> None:
                 messages, hours, reactions = utils.align_elements(
                     messages, hours, reactions
                 )
+                loop_parameter = min(len(messages), len(hours), len(reactions))
 
                 # Create dataset with the obtained data
                 data = []
-                for i in range(len(messages) - 1, 0, -1):
+                for i in range(loop_parameter - 1, 0, -1):
                     if len(reactions) < len(messages):
                         emojis, total = reactions[i - 1]
                     else:
@@ -82,7 +82,8 @@ def main_task(*, headless: bool) -> None:
                 bt.write_csv(
                     data, filename=const.FILENAME_TEMPLATE.substitute(channel=name)
                 )
-            else:
-                print(f"You're probably not following channel '{name}'")
+
+                driver.refresh()
+                driver.click(const.SELECTORS["channels_button"], wait=const.LONG_TIME)
 
     wrapper()
