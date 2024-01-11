@@ -31,15 +31,6 @@ def align_elements(
     if len(hours) > len(messages):
         hours.pop(0)
 
-    new_reactions = []
-    previous_emojis = None
-    for reaction in reactions:
-        emojis = reaction[0]
-        if emojis != previous_emojis:
-            new_reactions.append(reaction)
-            previous_emojis = emojis
-    reactions = new_reactions
-
     return messages, hours, reactions
 
 
@@ -52,4 +43,4 @@ def simplify_channel_name(channel_name: str) -> str:
     :return: The simplified channel name.
     """
     name_without_spaces = re.sub(r"\s", "_", channel_name)
-    return re.split(r"[.]", name_without_spaces)[0]
+    return re.split(r"[.!]", name_without_spaces)[0]
