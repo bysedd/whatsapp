@@ -1,6 +1,6 @@
 from botasaurus import AntiDetectDriver
 from src.utils import extract_list, simplify_channel_name
-from src.constants import SELECTORS, CHANNEL_TEMPLATE
+from src.constants import SELECTORS, CHANNEL_TEMPLATE, MINIMUM_MESSAGE_SIZE
 import re
 
 
@@ -15,14 +15,24 @@ def get_messages(driver: AntiDetectDriver) -> list[str]:
         driver.get_elements_or_none_by_selector(SELECTORS["message"])
     )
     pattern = r"[.!?;-]"
-    return [
-        re.sub(
-            r"https?://.*", "", (
-                re.split(pattern, message)[0][:-1]
-                if message.endswith(":")
-                else re.split(pattern, message)[0])).strip()
-        for message in raw_messages
-    ]
+    new_messages = []
+    for message in raw_messages:
+        # Remove any URLs from the message
+        message = re.sub(r"https?://.*", "", message)
+
+        # Split the message into parts
+        parts = re.split(pattern, message)
+
+        # If the first part is shorter than 20 characters, join the first two parts
+        # together
+        if len(parts[0]) < MINIMUM_MESSAGE_SIZE and len(parts) > 1:
+            new_message = parts[0] + parts[1]
+        else:
+            new_message = parts[0]
+
+        new_messages.append(new_message.strip())
+
+    return new_messages
 
 
 def get_hour(driver: AntiDetectDriver) -> list[str]:
