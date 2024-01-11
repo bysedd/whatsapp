@@ -1,7 +1,5 @@
 import re
 
-from src.constants import SELECTORS
-
 
 def extract_list(list_elements: list) -> list[str]:
     """
