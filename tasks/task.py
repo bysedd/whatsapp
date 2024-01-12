@@ -2,9 +2,9 @@ from time import sleep
 
 from botasaurus import *
 
-import tasks.task_utils as t_utils
-from src import constants as const
-from src import utils
+import src.task_utils as task_utils
+import src.constants as const
+import src.utils as utils
 
 
 def main_task(*, headless: bool) -> None:
@@ -39,10 +39,10 @@ def main_task(*, headless: bool) -> None:
         """
         driver.get(const.WA_URL)
 
-        channel_extractor = t_utils.ChannelExtractor(driver)
-        message_extractor = t_utils.MessageExtractor(driver)
-        hour_extractor = t_utils.HourExtractor(driver)
-        reaction_extractor = t_utils.ReactionExtractor(driver)
+        channel_extractor = task_utils.ChannelExtractor(driver)
+        message_extractor = task_utils.MessageExtractor(driver)
+        hour_extractor = task_utils.HourExtractor(driver)
+        reaction_extractor = task_utils.ReactionExtractor(driver)
 
         # Wait 5 minutes for WhatsApp to open completely
         driver.click(const.SELECTORS["channels_button"], wait=const.LONG_TIME)
