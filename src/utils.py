@@ -53,6 +53,8 @@ def simplify_channel_name(channel_name: str) -> str:
     """
     Simplifies the channel name by replacing all spaces with underscores and
     splitting the name by period.
+
+    :param channel_name: The channel name
     """
     name_without_spaces = const.SPACE_PATTERN.sub("_", channel_name)
     return const.SPLIT_PATTERN.split(name_without_spaces)[0]
@@ -64,9 +66,9 @@ def extract_data_to_dict(
     """
     Extracts data from given parameters and returns a dictionary.
 
-    :param messages: list of messages
-    :param hours: list of hours
-    :param reactions: list of reactions
+    :param messages: List of messages.
+    :param hours: List of hours.
+    :param reactions: List of reactions
     """
     emojis, total = reactions
     # Pad emojis with None if its length is less than 4
