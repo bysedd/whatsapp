@@ -3,7 +3,11 @@ import src.constants as const
 
 def extract_list(list_elements: list) -> list[str]:
     """
-    Extracts a list of strings from a given list of elements.
+    Extracts the text content from a list of elements.
+
+    :param list_elements: A list of elements from which text content will be extracted.
+    :return: A list of strings containing the extracted text content.
+
     """
     return [const.WHITESPACE_PATTERN.sub(" ", element.text.strip()) for element in
             list_elements]
@@ -11,8 +15,11 @@ def extract_list(list_elements: list) -> list[str]:
 
 def adjust_list_length(data_list: list, target_length: int) -> list:
     """
-    Ensure the list matches the target length by removing or adding elements as
-    necessary.
+    Adjusts the length of a given list to a specified target length.
+
+    :param data_list: The list has to be adjusted.
+    :param target_length: The desired length of the list.
+    :return: The adjusted list.
     """
     while len(data_list) > target_length:
         data_list.pop(0)
