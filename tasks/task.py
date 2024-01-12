@@ -4,7 +4,7 @@ from botasaurus import *
 
 from src import constants as const
 from src import utils
-from tasks import task_utils
+import tasks.task_utils as t_utils
 
 
 def main_task(*, headless: bool) -> None:
@@ -20,6 +20,7 @@ def main_task(*, headless: bool) -> None:
         profile="whatsapp",
         output=None,
         reuse_driver=True,
+        block_images=True,
     )
     def wrapper(driver: AntiDetectDriver, data):
         """
@@ -37,9 +38,15 @@ def main_task(*, headless: bool) -> None:
         :return: A list of dictionaries containing processed data.
         """
         driver.get(const.WA_URL)
+
+        channel_extractor = t_utils.ChannelExtractor(driver)
+        message_extractor = t_utils.MessageExtractor(driver)
+        hour_extractor = t_utils.HourExtractor(driver)
+        reaction_extractor = t_utils.ReactionExtractor(driver)
+
         # Wait 5 minutes for WhatsApp to open completely
         driver.click(const.SELECTORS["channels_button"], wait=const.LONG_TIME)
-        channels = task_utils.get_channels(driver)
+        channels = channel_extractor.extract()
 
         for name, element in channels.items():
             channel_chat = driver.get_element_or_none_by_selector(
@@ -49,9 +56,9 @@ def main_task(*, headless: bool) -> None:
                 driver.click(element)
                 sleep(const.SHORT_TIME)
 
-                messages = task_utils.get_messages(driver)
-                hours = task_utils.get_hour(driver)
-                reactions = task_utils.get_reactions(driver)
+                messages = message_extractor.extract()
+                hours = hour_extractor.extract()
+                reactions = reaction_extractor.extract()
 
                 messages, hours, reactions = utils.align_message_data(
                     messages, hours, reactions
