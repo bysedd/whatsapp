@@ -32,7 +32,14 @@ def align_message_data(
     messages: list[str], hours: list[str], reactions: list[tuple[list[str | None], int]]
 ):
     """
-    Aligns the elements in the given lists.
+    Aligns the message data to have the same length based on the shortest list among
+    messages, hours, and reactions.
+
+    :param messages: The list of messages.
+    :param hours: The list of hours.
+    :param reactions: The list of reactions.
+
+    :return: A tuple containing the aligned lists of messages, hours, and reactions.
     """
     target_length = min(len(messages), len(hours), len(reactions))
     messages = adjust_list_length(messages, target_length)
