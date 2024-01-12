@@ -1,4 +1,5 @@
 from string import Template
+import re
 
 CHANNEL_TEMPLATE: Template = Template(
     "span[class='ggj6brxn gfz4du6o r7fjleex g0rxnol2 lhj4utae"
@@ -19,3 +20,6 @@ WA_URL: str = "https://web.whatsapp.com/"
 MINIMUM_MESSAGE_SIZE: int = 20
 LONG_TIME: int = 300
 SHORT_TIME: int = 10
+WHITESPACE_PATTERN = re.compile(r"\s+")
+SPACE_PATTERN = re.compile(r"\s")
+SPLIT_PATTERN = re.compile(r"[.!]")
