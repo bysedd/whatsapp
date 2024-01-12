@@ -59,14 +59,13 @@ def main_task(*, headless: bool) -> None:
 
                 # Create dataset with the obtained data
                 data = [
-                    utils.extract_data_to_dict(
-                        message, hour, reaction
-                    ) for message, hour, reaction in zip(messages, hours, reactions)
+                    utils.extract_data_to_dict(message, hour, reaction)
+                    for message, hour, reaction in zip(messages, hours, reactions)
                 ]
 
                 bt.write_csv(
                     data[::-1],
-                    filename=const.FILENAME_TEMPLATE.substitute(channel=name)
+                    filename=const.FILENAME_TEMPLATE.substitute(channel=name),
                 )
 
                 driver.refresh()

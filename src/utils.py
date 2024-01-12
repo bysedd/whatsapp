@@ -9,8 +9,10 @@ def extract_list(list_elements: list) -> list[str]:
     :return: A list of strings containing the extracted text content.
 
     """
-    return [const.WHITESPACE_PATTERN.sub(" ", element.text.strip()) for element in
-            list_elements]
+    return [
+        const.WHITESPACE_PATTERN.sub(" ", element.text.strip())
+        for element in list_elements
+    ]
 
 
 def adjust_list_length(data_list: list, target_length: int) -> list:
@@ -27,8 +29,7 @@ def adjust_list_length(data_list: list, target_length: int) -> list:
 
 
 def align_message_data(
-        messages: list[str], hours: list[str],
-        reactions: list[tuple[list[str | None], int]]
+    messages: list[str], hours: list[str], reactions: list[tuple[list[str | None], int]]
 ):
     """
     Aligns the elements in the given lists.
@@ -51,9 +52,7 @@ def simplify_channel_name(channel_name: str) -> str:
 
 
 def extract_data_to_dict(
-        messages: list[str],
-        hours: list[str],
-        reactions: list[tuple[list[str | None], int]]
+    messages: list[str], hours: list[str], reactions: list[tuple[list[str | None], int]]
 ):
     """
     Extracts data from given parameters and returns a dictionary.
