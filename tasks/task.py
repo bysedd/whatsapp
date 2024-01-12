@@ -53,7 +53,7 @@ def main_task(*, headless: bool) -> None:
                 hours = task_utils.get_hour(driver)
                 reactions = task_utils.get_reactions(driver)
 
-                messages, hours, reactions = utils.align_elements(
+                messages, hours, reactions = utils.align_message_data(
                     messages, hours, reactions
                 )
                 loop_parameter = min(len(messages), len(hours), len(reactions))
