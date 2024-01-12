@@ -2,7 +2,7 @@ from time import sleep
 
 from botasaurus import *
 
-import tasks.task_utils as t_utils
+import src.task_utils as t_utils
 from src import constants as const
 from src import utils
 
