@@ -2,8 +2,8 @@ import re
 
 from botasaurus import AntiDetectDriver
 
-from src.constants import CHANNEL_TEMPLATE, MINIMUM_MESSAGE_SIZE, SELECTORS
-from src.utils import extract_list, simplify_channel_name
+import src.constants as const
+import src.utils as utils
 
 
 def get_messages(driver: AntiDetectDriver) -> list[str]:
@@ -13,8 +13,8 @@ def get_messages(driver: AntiDetectDriver) -> list[str]:
     :param driver: The AntiDetectDriver object representing the web driver.
     :return: A list of the messages in the driver.
     """
-    raw_messages = extract_list(
-        driver.get_elements_or_none_by_selector(SELECTORS["message"])
+    raw_messages = utils.extract_list(
+        driver.get_elements_or_none_by_selector(const.SELECTORS["message"])
     )
     pattern = r"[.!?;-]"
     new_messages = []
@@ -27,7 +27,7 @@ def get_messages(driver: AntiDetectDriver) -> list[str]:
 
         # If the first part is shorter than 20 characters, join the first two parts
         # together
-        if len(parts[0]) < MINIMUM_MESSAGE_SIZE and len(parts) > 1:
+        if len(parts[0]) < const.MINIMUM_MESSAGE_SIZE and len(parts) > 1:
             new_message = parts[0] + parts[1]
         else:
             new_message = parts[0]
@@ -44,7 +44,9 @@ def get_hour(driver: AntiDetectDriver) -> list[str]:
     :param driver: The driver used to interact with the web page.
     :return: A list of filtered hours in HH:MM format.
     """
-    raw_hours = extract_list(driver.get_elements_or_none_by_selector(SELECTORS["hour"]))
+    raw_hours = utils.extract_list(
+        driver.get_elements_or_none_by_selector(const.SELECTORS["hour"])
+    )
 
     # Regex to find times in HH:MM format
     time_pattern = re.compile(r"\d{2}:\d{2}")
@@ -72,7 +74,7 @@ def get_reactions(driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
              - A list of emojis found in the reaction string.
              - The total number of reactions.
     """
-    raw_elements = driver.get_elements_or_none_by_selector(SELECTORS["reactions"])
+    raw_elements = driver.get_elements_or_none_by_selector(const.SELECTORS["reactions"])
     raw_reactions = [element.get_attribute("aria-label") for element in raw_elements]
 
     emojis = [
@@ -107,11 +109,13 @@ def get_channels(driver: AntiDetectDriver) -> dict[str, str]:
     :param driver: The driver used to interact with the web page.
     :return: A list of available channels.
     """
-    channel_list = driver.get_element_or_none_by_selector(SELECTORS["channel_list"])
-    channels = channel_list.find_elements("css selector", SELECTORS["channel"])
+    channel_list = driver.get_element_or_none_by_selector(
+        const.SELECTORS["channel_list"], wait=const.LONG_TIME
+    )
+    channels = channel_list.find_elements("css selector", const.SELECTORS["channel"])
     return {
-        simplify_channel_name(
+        utils.simplify_channel_name(
             channel.get_attribute("title")
-        ): CHANNEL_TEMPLATE.substitute(channel=channel.get_attribute("title"))
+        ): const.CHANNEL_TEMPLATE.substitute(channel=channel.get_attribute("title"))
         for channel in channels
     }
