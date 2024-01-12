@@ -56,31 +56,17 @@ def main_task(*, headless: bool) -> None:
                 messages, hours, reactions = utils.align_message_data(
                     messages, hours, reactions
                 )
-                loop_parameter = min(len(messages), len(hours), len(reactions))
 
                 # Create dataset with the obtained data
-                data = []
-                for i in range(loop_parameter - 1, 0, -1):
-                    if len(reactions) < len(messages):
-                        emojis, total = reactions[i - 1]
-                    else:
-                        emojis, total = reactions[i]
-                    # Pad emojis with None if its length is less than 4
-                    emojis = (emojis + [None] * 4)[:4]
-                    data.append(
-                        {
-                            "message": messages[i],
-                            "hour": hours[i],
-                            "emoji_1": emojis[0],
-                            "emoji_2": emojis[1],
-                            "emoji_3": emojis[2],
-                            "emoji_4": emojis[3],
-                            "total": total,
-                        }
-                    )
+                data = [
+                    utils.extract_data_to_dict(
+                        message, hour, reaction
+                    ) for message, hour, reaction in zip(messages, hours, reactions)
+                ]
 
                 bt.write_csv(
-                    data, filename=const.FILENAME_TEMPLATE.substitute(channel=name)
+                    data[::-1],
+                    filename=const.FILENAME_TEMPLATE.substitute(channel=name)
                 )
 
                 driver.refresh()
