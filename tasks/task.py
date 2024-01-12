@@ -2,9 +2,9 @@ from time import sleep
 
 from botasaurus import *
 
+import tasks.task_utils as t_utils
 from src import constants as const
 from src import utils
-import tasks.task_utils as t_utils
 
 
 def main_task(*, headless: bool) -> None:
