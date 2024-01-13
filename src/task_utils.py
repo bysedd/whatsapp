@@ -24,7 +24,7 @@ class AbstractExtractor(ABC):
         and process it further.
         """
 
-    def get_elements(self, selector):
+    def get_elements(self, selector) -> list:
         """
         Returns a list of elements found by the given selector.
 
