@@ -23,7 +23,6 @@ class AbstractExtractor(ABC):
         This method is used to extract data from a specific source
         and process it further.
         """
-        pass
 
     def get_elements(self, selector):
         """
