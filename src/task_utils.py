@@ -20,6 +20,12 @@ class AbstractExtractor(ABC):
         pass
 
     def get_elements(self, selector):
+        """
+        Returns a list of elements found by the given selector.
+
+        :param selector: The CSS selector to locate the elements.
+        :return: A list of elements found by the given selector.
+        """
         return utils.extract_list(
             self.driver.get_elements_or_none_by_selector(selector)
         )
@@ -33,7 +39,13 @@ class MessageExtractor(AbstractExtractor):
 
     pattern = r"[.!?;-]"
 
-    def extract(self):
+    def extract(self) -> list[str]:
+        """
+        Extracts messages from raw messages by removing URLs and splitting them based
+        on a pattern.
+
+        :return: A list of extracted messages.
+        """
         raw_messages = self.get_elements(const.SELECTORS["message"])
         new_messages = []
         for message in raw_messages:
@@ -53,7 +65,12 @@ class HourExtractor(AbstractExtractor):
 
     pattern = re.compile(r"\d{2}:\d{2}")
 
-    def extract(self):
+    def extract(self) -> list[str]:
+        """
+        Extracts the hours from the elements and filters out duplicate hours.
+
+        :return: A list of filtered hours.
+        """
         raw_hours = self.get_elements(const.SELECTORS["hour"])
         hours = self.pattern.findall(" ".join(raw_hours))
         filtered_hours = []
@@ -75,7 +92,12 @@ class ReactionExtractor(AbstractExtractor):
 
     pattern = re.compile(r"[\d.,]+")
 
-    def extract(self):
+    def extract(self) -> list[tuple[list, int]]:
+        """
+        Extracts reactions from a web page and returns a list of tuples.
+
+        :return: A list of tuples containing emojis and the corresponding total.
+        """
         raw_reactions = self.driver.get_elements_or_none_by_selector(
             const.SELECTORS["reactions"]
         )
@@ -102,6 +124,12 @@ class ChannelExtractor(AbstractExtractor):
     """This class is used to extract channels from a channel list."""
 
     def extract(self):
+        """
+        Extracts the channel information from the web page.
+
+        :return: A dictionary containing the simplified channel name as the key,
+        and the channel template as the value.
+        """
         channel_list = self.driver.get_element_or_none_by_selector(
             const.SELECTORS["channel_list"], wait=const.LONG_TIME
         )
