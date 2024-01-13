@@ -16,7 +16,7 @@ class AbstractExtractor(ABC):
         self.driver = driver
 
     @abstractmethod
-    def extract(self):
+    def extract(self, list_msgs: list):
         """
         Extracts data from the given source.
 
@@ -24,7 +24,7 @@ class AbstractExtractor(ABC):
         and process it further.
         """
 
-    def get_elements(self, selector) -> list:
+    def get_elements(self, selector: str) -> list:
         """
         Returns a list of elements found by the given selector.
 
@@ -42,19 +42,21 @@ class MessageExtractor(AbstractExtractor):
     responsible for extracting messages from a source.
     """
 
-    pattern = r"[.!?;-]"
+    pattern = r"[.!?;-|]"
 
-    def extract(self) -> list[str]:
+    def extract(self, list_msgs: list) -> list[str]:
         """
         Extracts messages from raw messages by removing URLs and splitting them based
         on a pattern.
 
         :return: A list of extracted messages.
         """
-        raw_messages = self.get_elements(const.SELECTORS["message"])
         new_messages = []
-        for message in raw_messages:
-            message = re.sub(r"https?://.*", "", message)
+        for message in list_msgs:
+            # Remove URLs
+            message = re.sub(r"https?://.*[^s]*", "", message)
+            # Remove colons
+            message = re.sub(r":", "", message)
             parts = re.split(self.pattern, message)
             new_message = (
                 parts[0] + parts[1]
@@ -70,40 +72,30 @@ class HourExtractor(AbstractExtractor):
 
     pattern = re.compile(r"\d{2}:\d{2}")
 
-    def extract(self) -> list[str]:
+    def extract(self, list_msgs: list) -> list[str]:
         """
         Extracts the hours from the elements and filters out duplicate hours.
 
         :return: A list of filtered hours.
         """
-        raw_hours = self.get_elements(const.SELECTORS["hour"])
-        hours = self.pattern.findall(" ".join(raw_hours))
-        filtered_hours = []
-        i = 0
-        while i < len(hours):
-            if i < len(hours) - 1 and hours[i] == hours[i + 1]:
-                i += 2
-            else:
-                filtered_hours.append(hours[i])
-                i += 1
-        return filtered_hours
+        times = re.findall(self.pattern, " ".join(list_msgs))
+        return times
 
 
-class ReactionExtractor(AbstractExtractor):
+class ReactionExtractor:
     """
-    The ReactionExtractor class is a subclass of the AbstractExtractor class.
-    It provides methods to extract reactions from a web page.
+    The ReactionExtractor class provides methods to extract reactions from a web page.
     """
 
     pattern = re.compile(r"[\d.,]+")
 
-    def extract(self) -> list[tuple[list, int]]:
+    def extract(self, driver: AntiDetectDriver) -> list[tuple[list, int]]:
         """
         Extracts reactions from a web page and returns a list of tuples.
 
         :return: A list of tuples containing emojis and the corresponding total.
         """
-        raw_reactions = self.driver.get_elements_or_none_by_selector(
+        raw_reactions = driver.get_elements_or_none_by_selector(
             const.SELECTORS["reactions"]
         )
         raw_reactions_texts = [
@@ -125,17 +117,18 @@ class ReactionExtractor(AbstractExtractor):
         return results
 
 
-class ChannelExtractor(AbstractExtractor):
+class ChannelExtractor:
     """This class is used to extract channels from a channel list."""
 
-    def extract(self):
+    @staticmethod
+    def extract(driver: AntiDetectDriver):
         """
         Extracts the channel information from the web page.
 
         :return: A dictionary containing the simplified channel name as the key,
         and the channel template as the value.
         """
-        channel_list = self.driver.get_element_or_none_by_selector(
+        channel_list = driver.get_element_or_none_by_selector(
             const.SELECTORS["channel_list"], wait=const.LONG_TIME
         )
         channels = channel_list.find_elements(
