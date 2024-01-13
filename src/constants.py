@@ -17,7 +17,7 @@ SELECTORS: dict[str, str] = {
     "reactions": "button[class='dhq51u3o']",
     "scroll_top": "div[class='p357zi0d kk3akd72 ac2vgrno i5tg98hk f9ovudaz lzi2pvmc "
     "gx1rr48f']",
-    "post": "div[class='CzM4m _2zFLj']"
+    "post": "div[class='CzM4m _2zFLj']",
 }
 WA_URL: str = "https://web.whatsapp.com/"
 MINIMUM_MESSAGE_SIZE: int = 50
