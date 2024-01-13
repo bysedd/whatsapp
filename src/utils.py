@@ -86,6 +86,12 @@ def extract_data_to_dict(
 
 
 def scroll_to_element(driver: AntiDetectDriver, selector: str):
+    """
+    Scrolls the page to the specified element.
+
+    :param driver: The AntiDetectDriver instance to use for scrolling.
+    :param selector: The selector to identify the element.
+    """
     element = driver.get_element_or_none_by_selector(selector)
     if driver.can_element_be_scrolled(selector):
         driver.execute_script("arguments[0].scrollIntoView()", element)
