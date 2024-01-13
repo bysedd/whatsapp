@@ -47,9 +47,6 @@ def main_task(*, headless: bool) -> None:
         channels = channel_extractor.extract(driver=driver)
 
         for name, element in channels.items():
-            channel_chat = driver.get_element_or_none_by_selector(
-                element, wait=const.LONG_TIME
-            )
             driver.click(element)
             driver.sleep(const.SHORT_TIME)
             utils.scroll_to_element(driver, const.SELECTORS["scroll_top"])
