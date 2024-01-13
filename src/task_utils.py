@@ -17,6 +17,12 @@ class AbstractExtractor(ABC):
 
     @abstractmethod
     def extract(self):
+        """
+        Extracts data from the given source.
+
+        This method is used to extract data from a specific source
+        and process it further.
+        """
         pass
 
     def get_elements(self, selector):
