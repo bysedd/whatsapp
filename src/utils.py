@@ -1,5 +1,6 @@
-import src.constants as const
 from botasaurus import AntiDetectDriver
+
+import src.constants as const
 
 
 def extract_list(list_elements: list) -> list[str]:
