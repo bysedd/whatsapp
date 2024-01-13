@@ -44,16 +44,16 @@ class MessageExtractor(AbstractExtractor):
 
     pattern = r"[.!?;-|]"
 
-    def extract(self, list_msgs: list) -> list[str]:
+    def extract(self, list_posts: list) -> list[str]:
         """
         Extracts messages from raw messages by removing URLs and splitting them based
         on a pattern.
 
-        :param list_msgs: A list of unformulated messages
+        :param list_posts: A list of unformulated messages
         :return: A list of extracted messages.
         """
         new_messages = []
-        for message in list_msgs:
+        for message in list_posts:
             # Remove URLs
             message = re.sub(r"https?://.*[^s]*", "", message)
             # Remove colons
@@ -73,14 +73,14 @@ class HourExtractor(AbstractExtractor):
 
     pattern = re.compile(r"\d{2}:\d{2}")
 
-    def extract(self, list_msgs: list) -> list[str]:
+    def extract(self, list_posts: list) -> list[str]:
         """
         Extracts the hours from the elements and filters out duplicate hours.
 
-        :param list_msgs: A list of unformulated messages
+        :param list_posts: A list of unformulated messages
         :return: A list of filtered hours.
         """
-        times = re.findall(self.pattern, " ".join(list_msgs))
+        times = re.findall(self.pattern, " ".join(list_posts))
         return times
 
 
