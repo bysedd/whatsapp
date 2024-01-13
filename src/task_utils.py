@@ -49,6 +49,7 @@ class MessageExtractor(AbstractExtractor):
         Extracts messages from raw messages by removing URLs and splitting them based
         on a pattern.
 
+        :param list_msgs: A list of unformulated messages
         :return: A list of extracted messages.
         """
         new_messages = []
@@ -76,6 +77,7 @@ class HourExtractor(AbstractExtractor):
         """
         Extracts the hours from the elements and filters out duplicate hours.
 
+        :param list_msgs: A list of unformulated messages
         :return: A list of filtered hours.
         """
         times = re.findall(self.pattern, " ".join(list_msgs))
@@ -93,6 +95,7 @@ class ReactionExtractor:
         """
         Extracts reactions from a web page and returns a list of tuples.
 
+        :param driver: The web driver.
         :return: A list of tuples containing emojis and the corresponding total.
         """
         raw_reactions = driver.get_elements_or_none_by_selector(
@@ -125,8 +128,8 @@ class ChannelExtractor:
         """
         Extracts the channel information from the web page.
 
-        :return: A dictionary containing the simplified channel name as the key,
-        and the channel template as the value.
+        :param driver: The web driver.
+        :return: A dictionary containing the channel name and the channel template.
         """
         channel_list = driver.get_element_or_none_by_selector(
             const.SELECTORS["channel_list"], wait=const.LONG_TIME
