@@ -1,8 +1,8 @@
 import re
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 from botasaurus import AntiDetectDriver
-from datetime import datetime
 
 import src.constants as const
 import src.utils as utils
@@ -66,7 +66,7 @@ class MessageExtractor(AbstractExtractor):
                 else parts[0]
             )
             # Remove extra spaces
-            new_message = re.sub(r'\s+', ' ', new_message)
+            new_message = re.sub(r"\s+", " ", new_message)
             new_messages.append(new_message.strip())
         return new_messages
 
@@ -85,10 +85,7 @@ class HourExtractor(AbstractExtractor):
         :return: A list of filtered hours.
         """
         times = re.findall(self.pattern, " ".join(list_posts))
-        times = [
-            datetime.strptime(time, self.datetime_format)
-            for time in times
-        ]
+        times = [datetime.strptime(time, self.datetime_format) for time in times]
         return times
 
 
