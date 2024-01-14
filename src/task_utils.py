@@ -42,7 +42,7 @@ class MessageExtractor(AbstractExtractor):
     responsible for extracting messages from a source.
     """
 
-    pattern = r"[.!?;-|]"
+    pattern = r"[.!?;-]"
 
     def extract(self, list_posts: list) -> list[str]:
         """
