@@ -2,6 +2,7 @@ import re
 from abc import ABC, abstractmethod
 
 from botasaurus import AntiDetectDriver
+from datetime import datetime
 
 import src.constants as const
 import src.utils as utils
@@ -42,7 +43,7 @@ class MessageExtractor(AbstractExtractor):
     responsible for extracting messages from a source.
     """
 
-    pattern = r"[.!?;-]"
+    pattern = r"(?<![a-zA-Z])-|-(?![a-zA-Z])|[.!?;|]"
 
     def extract(self, list_posts: list) -> list[str]:
         """
@@ -64,6 +65,8 @@ class MessageExtractor(AbstractExtractor):
                 if len(parts[0]) < const.MINIMUM_MESSAGE_SIZE and len(parts) > 1
                 else parts[0]
             )
+            # Remove extra spaces
+            new_message = re.sub(r'\s+', ' ', new_message)
             new_messages.append(new_message.strip())
         return new_messages
 
@@ -72,8 +75,9 @@ class HourExtractor(AbstractExtractor):
     """A class that extracts hours from a given input string."""
 
     pattern = re.compile(r"\d{2}:\d{2}")
+    datetime_format = "%H:%M"
 
-    def extract(self, list_posts: list) -> list[str]:
+    def extract(self, list_posts: list) -> list[datetime]:
         """
         Extracts the hours from the elements and filters out duplicate hours.
 
@@ -81,6 +85,10 @@ class HourExtractor(AbstractExtractor):
         :return: A list of filtered hours.
         """
         times = re.findall(self.pattern, " ".join(list_posts))
+        times = [
+            datetime.strptime(time, self.datetime_format)
+            for time in times
+        ]
         return times
 
 
@@ -91,7 +99,7 @@ class ReactionExtractor:
 
     pattern = re.compile(r"[\d.,]+")
 
-    def extract(self, driver: AntiDetectDriver) -> list[tuple[list, int]]:
+    def extract(self, driver: AntiDetectDriver) -> list[tuple[list[str], int]]:
         """
         Extracts reactions from a web page and returns a list of tuples.
 
