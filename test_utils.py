@@ -26,8 +26,8 @@ class TestUtils(unittest.TestCase):
 
     def test_align_message_data(self):
         messages = ['message1', 'message2', 'message3']
-        hours = ['hour1', 'hour2']
-        reactions = [(['reaction1', 'reaction2', None, None], 12)]
+        hours = ['12:34', '13:05']
+        reactions = [(['🤣', '👍', '❤️', None], 12)]
         aligned_messages, aligned_hours, aligned_reactions = utils.align_message_data(
             messages, hours, reactions)
         self.assertListEqual(aligned_messages, [messages[-1]])
@@ -39,13 +39,13 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(simple_name, 'channel_name')
 
     def test_extract_data_to_dict(self):
-        messages = ['message']
-        hours = ['hour']
+        message = 'message'
+        hour = '14:30'
         reactions = [['😂', '😍'], 2]
-        data_dict = utils.extract_data_to_dict(messages, hours, reactions)
+        data_dict = utils.extract_data_to_dict(message, hour, reactions)
         expected_dict = {
-            "message": messages,
-            "hour": hours,
+            "message": message,
+            "hour": hour,
             "emoji_1": '😂',
             "emoji_2": '😍',
             "emoji_3": None,
