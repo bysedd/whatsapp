@@ -63,21 +63,21 @@ def simplify_channel_name(channel_name: str) -> str:
 
 
 def extract_data_to_dict(
-    messages: list[str], hours: list[str], reactions: list[[list[str | None], int]]
+    message: str, hour: str, reactions: list[[list[str | None], int]]
 ):
     """
     Extracts data from given parameters and returns a dictionary.
 
-    :param messages: List of messages.
-    :param hours: List of hours.
+    :param message: Message content.
+    :param hour: Hour of message.
     :param reactions: List of reactions
     """
     emojis, total = reactions
     # Pad emojis with None if its length is less than 4
     emojis = (emojis + [None] * 4)[:4]
     return {
-        "message": messages,
-        "hour": hours,
+        "message": message,
+        "hour": hour,
         "emoji_1": emojis[0],
         "emoji_2": emojis[1],
         "emoji_3": emojis[2],
