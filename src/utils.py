@@ -1,8 +1,9 @@
+import re
 from datetime import datetime
 
-import src.constants as const
 from botasaurus import AntiDetectDriver
-import re
+
+import src.constants as const
 
 
 def extract_list(list_elements: list) -> list[str]:
@@ -32,9 +33,7 @@ def adjust_list_length(data_list: list, target_length: int) -> list:
 
 
 def align_message_data(
-        messages: list[str],
-        hours: list[datetime],
-        reactions: list[tuple[list[str], int]]
+    messages: list[str], hours: list[datetime], reactions: list[tuple[list[str], int]]
 ):
     """
     Aligns the message data to have the same length based on the shortest list among
@@ -61,12 +60,12 @@ def simplify_channel_name(channel_name: str) -> str:
 
     :param channel_name: The channel name
     """
-    name_without_extra_spaces = re.sub(' +', '_', channel_name)
+    name_without_extra_spaces = re.sub(" +", "_", channel_name)
     return const.SPLIT_PATTERN.split(name_without_extra_spaces)[0]
 
 
 def extract_data_to_dict(
-        message: str, hour: datetime, reactions: list[[list[str | None], int]]
+    message: str, hour: datetime, reactions: list[[list[str | None], int]]
 ):
     """
     Extracts data from given parameters and returns a dictionary.
