@@ -49,7 +49,7 @@ def main_task(*, headless: bool) -> None:
         for name, element in channels.items():
             driver.click(element)
             driver.sleep(const.SHORT_TIME)
-            utils.scroll_to_element(driver, const.SELECTORS["scroll_top"])
+            task_utils.scroll_to_element(driver, const.SELECTORS["scroll_top"])
 
             posts = utils.extract_list(driver.get_elements_or_none_by_selector(
                 const.SELECTORS["post"]
