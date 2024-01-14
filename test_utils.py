@@ -1,7 +1,9 @@
 import unittest
 from unittest.mock import MagicMock
 import src.utils as utils
+from datetime import datetime
 
+datetime_format = "%H:%M"
 
 class TestUtils(unittest.TestCase):
 
@@ -26,7 +28,10 @@ class TestUtils(unittest.TestCase):
 
     def test_align_message_data(self):
         messages = ['message1', 'message2', 'message3']
-        hours = ['12:34', '13:05']
+        hours = [
+            datetime.strptime('12:57', datetime_format),
+            datetime.strptime('13:04', datetime_format)
+        ]
         reactions = [(['🤣', '👍', '❤️', None], 12)]
         aligned_messages, aligned_hours, aligned_reactions = utils.align_message_data(
             messages, hours, reactions)
@@ -40,12 +45,12 @@ class TestUtils(unittest.TestCase):
 
     def test_extract_data_to_dict(self):
         message = 'message'
-        hour = '14:30'
+        hour = datetime.strptime('4:20', datetime_format)
         reactions = [['😂', '😍'], 2]
         data_dict = utils.extract_data_to_dict(message, hour, reactions)
         expected_dict = {
             "message": message,
-            "hour": hour,
+            "hour": hour.strftime('%H:%M'),
             "emoji_1": '😂',
             "emoji_2": '😍',
             "emoji_3": None,
