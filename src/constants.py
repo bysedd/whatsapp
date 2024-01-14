@@ -1,5 +1,6 @@
 import re
 from string import Template
+from botasaurus import bt
 
 CHANNEL_TEMPLATE: Template = Template(
     "span[class='ggj6brxn gfz4du6o r7fjleex g0rxnol2 lhj4utae"
@@ -22,7 +23,8 @@ SELECTORS: dict[str, str] = {
 WA_URL: str = "https://web.whatsapp.com/"
 MINIMUM_MESSAGE_SIZE: int = 50
 LONG_TIME: int = 300
-SHORT_TIME: int = 5
+MPL: int = bt.calc_max_parallel_browsers()
+SHORT_TIME: int = MPL * 2 if MPL < 5 else MPL / 2
 WHITESPACE_PATTERN = re.compile(r"\s+")
 SPACE_PATTERN = re.compile(r"\s")
 SPLIT_PATTERN = re.compile(r"[.!]")
