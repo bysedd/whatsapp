@@ -1,6 +1,8 @@
-import src.constants as const
-from botasaurus import AntiDetectDriver
 import re
+
+from botasaurus import AntiDetectDriver
+
+import src.constants as const
 
 
 def extract_list(list_elements: list) -> list[str]:
@@ -58,7 +60,7 @@ def simplify_channel_name(channel_name: str) -> str:
 
     :param channel_name: The channel name
     """
-    name_without_extra_spaces = re.sub(' +', '_', channel_name)
+    name_without_extra_spaces = re.sub(" +", "_", channel_name)
     return const.SPLIT_PATTERN.split(name_without_extra_spaces)[0]
 
 
