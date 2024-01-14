@@ -1,8 +1,6 @@
 import re
 from datetime import datetime
 
-from botasaurus import AntiDetectDriver
-
 import src.constants as const
 
 
@@ -86,15 +84,3 @@ def extract_data_to_dict(
         "emoji_4": emojis[3],
         "total": total,
     }
-
-
-def scroll_to_element(driver: AntiDetectDriver, selector: str):
-    """
-    Scrolls the page to the specified element.
-
-    :param driver: The AntiDetectDriver instance to use for scrolling.
-    :param selector: The selector to identify the element.
-    """
-    element = driver.get_element_or_none_by_selector(selector)
-    if driver.can_element_be_scrolled(selector):
-        driver.execute_script("arguments[0].scrollIntoView()", element)
