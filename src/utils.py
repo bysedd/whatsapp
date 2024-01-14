@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import src.constants as const
 from botasaurus import AntiDetectDriver
 import re
@@ -9,7 +11,6 @@ def extract_list(list_elements: list) -> list[str]:
 
     :param list_elements: A list of elements from which text content will be extracted.
     :return: A list of strings containing the extracted text content.
-
     """
     return [
         const.WHITESPACE_PATTERN.sub(" ", element.text.strip())
@@ -31,7 +32,9 @@ def adjust_list_length(data_list: list, target_length: int) -> list:
 
 
 def align_message_data(
-    messages: list[str], hours: list[str], reactions: list[tuple[list[str | None], int]]
+        messages: list[str],
+        hours: list[datetime],
+        reactions: list[tuple[list[str], int]]
 ):
     """
     Aligns the message data to have the same length based on the shortest list among
@@ -63,7 +66,7 @@ def simplify_channel_name(channel_name: str) -> str:
 
 
 def extract_data_to_dict(
-    message: str, hour: str, reactions: list[[list[str | None], int]]
+        message: str, hour: datetime, reactions: list[[list[str | None], int]]
 ):
     """
     Extracts data from given parameters and returns a dictionary.
@@ -77,7 +80,7 @@ def extract_data_to_dict(
     emojis = (emojis + [None] * 4)[:4]
     return {
         "message": message,
-        "hour": hour,
+        "hour": hour.strftime("%H:%M"),
         "emoji_1": emojis[0],
         "emoji_2": emojis[1],
         "emoji_3": emojis[2],
