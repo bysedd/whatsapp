@@ -52,9 +52,9 @@ def main_task(*, headless: bool) -> None:
             task_utils.scroll_to_element(driver, const.SELECTORS["scroll_top"])
             driver.sleep(const.SHORT_TIME / 2)
 
-            posts = utils.extract_list(driver.get_elements_or_none_by_selector(
-                const.SELECTORS["post"]
-            ))
+            posts = utils.extract_list(
+                driver.get_elements_or_none_by_selector(const.SELECTORS["post"])
+            )
 
             messages = message_extractor.extract(list_posts=posts)
             hours = hour_extractor.extract(list_posts=posts)
