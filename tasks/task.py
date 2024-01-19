@@ -50,6 +50,7 @@ def main_task(*, headless: bool) -> None:
             driver.click(element)
             driver.sleep(const.SHORT_TIME)
             task_utils.scroll_to_element(driver, const.SELECTORS["scroll_top"])
+            driver.sleep(const.SHORT_TIME / 2)
 
             posts = utils.extract_list(driver.get_elements_or_none_by_selector(
                 const.SELECTORS["post"]
@@ -74,5 +75,8 @@ def main_task(*, headless: bool) -> None:
                 data[::-1],
                 filename=const.FILENAME_TEMPLATE.substitute(channel=name),
             )
+
+            driver.refresh()
+            driver.click(const.SELECTORS["channels_button"], wait=const.LONG_TIME)
 
     wrapper()
