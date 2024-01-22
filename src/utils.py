@@ -63,7 +63,7 @@ def simplify_channel_name(channel_name: str) -> str:
 
 
 def extract_data_to_dict(
-    message: str, hour: datetime, reactions: list[[list[str | None], int]]
+    message: str, hour: datetime, reactions: list[tuple[list[str], int]]
 ):
     """
     Extracts data from given parameters and returns a dictionary.
